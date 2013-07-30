@@ -1,0 +1,404 @@
+package com.eaglesakura.game.foxone.scene;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import android.util.Log;
+
+import com.eaglesakura.game.foxone.Define;
+import com.eaglesakura.game.foxone.FoxOne;
+import com.eaglesakura.game.foxone.R;
+import com.eaglesakura.game.foxone.bg.ScrollBackground;
+import com.eaglesakura.game.foxone.bullet.BulletBase;
+import com.eaglesakura.game.foxone.effect.EffectBase;
+import com.eaglesakura.game.foxone.fighter.enemy.EnemyFighterBase;
+import com.eaglesakura.game.foxone.fighter.enemy.EnemyFighterBase.MoveType;
+import com.eaglesakura.game.foxone.fighter.enemy.EnemyFighterBase.AttackType;
+import com.eaglesakura.game.foxone.input.AttackButton;
+import com.eaglesakura.game.foxone.ui.BombsInfo;
+import com.eaglesakura.game.foxone.ui.HPBar;
+import com.eaglesakura.lib.android.game.graphics.Color;
+import com.eaglesakura.lib.android.game.scene.SceneBase;
+import com.eaglesakura.lib.android.game.scene.SceneManager;
+
+public class GameSceneStage1 extends PlaySceneBase {
+
+	/**
+	 * 背景素材
+	 */
+	ScrollBackground background = null;
+
+	/**
+	 * ボム発射ボタン
+	 */
+	AttackButton bombButton = null;
+
+	/**
+	 * HPバー
+	 */
+	HPBar hpBar = null;
+
+	/**
+	 * ボム残弾
+	 */
+	BombsInfo bomsInfo = null;
+
+	/**
+	 * 強制ゲームクリアフラグ
+	 */
+	boolean gameClear = false;
+
+	public GameSceneStage1(FoxOne game) {
+		super(game);
+	}
+
+	/**
+	 * 敵の生成情報を管理するクラス
+	 * @author TAKESHI YAMASHITA
+	 *
+	 */
+	class StageEnemyData {
+		/**
+		 * 出現フレーム
+		 */
+		int createFrame;
+
+		/**
+		 * 出現させる敵タイプ
+		 */
+		ImageType imageType;
+
+		/**
+		 * 攻撃タイプ
+		 */
+		AttackType attackType;
+
+		/**
+		 * 移動タイプ
+		 */
+		MoveType moveType;
+
+		/**
+		 * 出現X位置
+		 */
+		float createX;
+
+		/**
+		 * 出現Y位置
+		 */
+		float createY;
+
+		/**
+		 * 初期値を設定して敵情報を作成する
+		 * @param createFrame
+		 * @param enemyType
+		 * @param moveType
+		 * @param createX
+		 * @param createY
+		 */
+		public StageEnemyData(int createFrame, ImageType enemyType, MoveType moveType, AttackType attackType,float createX, float createY) {
+			this.createFrame = createFrame;
+			this.imageType = enemyType;
+			this.moveType = moveType;
+			this.attackType = attackType;
+			this.createX = createX;
+			this.createY = createY;
+			Log.d("","とんかち");
+		}
+
+		/**
+		 * 指定フレームに達していたら敵を作成し、trueを返す。
+		 * @return
+		 */
+		public boolean create() {
+			if (frameCount < createFrame) {
+				return false;
+			}
+			Log.d("","でけでけお"+imageType+moveType+attackType+createX+createY);
+
+			// 敵を作成する
+			addEnemy(imageType, moveType,attackType, (int)createX, (int)createY);
+
+			return true;
+		}
+	}
+
+	List<StageEnemyData> stageEnemyDataList = new ArrayList<GameSceneStage1.StageEnemyData>();
+
+	/**
+	 * 配置情報を最初に登録する
+	 */
+	@Override
+	protected void initializeEnemy() { // 出現させるY座標
+		final float CREATE_Y = -150;
+		// プレイエリアの左右から幅を取得する
+		final int PLAY_AREA_WIDTH = Define.PLAY_AREA_RIGHT - Define.PLAY_AREA_LEFT;
+		try {
+			InputStream is = game.getContext().openFileInput("stage1.json");
+			BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+			String line = null;
+
+			int createFrame = 0;
+
+			String fileContents = "";
+			// テキストファイルから全行読み込む
+			while ((line = reader.readLine()) != null) {
+				fileContents += line;
+			}
+			Log.d("","fileContents"+fileContents);
+			JSONArray enemies = new JSONArray(fileContents);
+			for(int i=0;i<enemies.length();i++){
+				JSONObject enemy = enemies.getJSONObject(i);
+				AttackType attackType = AttackType.valueOf(enemy.getString("attackType")); 
+				MoveType moveType = MoveType.valueOf(enemy.getString("moveType")); 
+				ImageType imageType = ImageType.valueOf(enemy.getString("imageType")); 
+				float createX = PLAY_AREA_WIDTH / 5f * enemy.getInt("x");
+				createX += PLAY_AREA_WIDTH / 5f / 2f;
+				createX += Define.PLAY_AREA_LEFT;
+				float createY = Define.VIRTUAL_DISPLAY_HEIGHT-PLAY_AREA_WIDTH / 5 * enemy.getInt("y");
+
+
+				stageEnemyDataList.add(new StageEnemyData(createFrame, imageType, moveType,attackType, createX, createY));
+
+			}
+			// 1ラインにつき30フレーム後に生成する
+			createFrame += 30;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException("file load error!!");
+		}	
+	}
+
+	@Override
+	public void onSceneStart(SceneManager manager, SceneBase before) {
+		super.onSceneStart(manager, before);
+
+		// ボムボタンを生成して、ボム用に初期化する
+		bombButton = new AttackButton(this);
+		bombButton.initBombButton();
+		player.setBombButton(bombButton);
+
+		// 背景素材を読み込む
+		background = new ScrollBackground(game, new int[] {
+				R.drawable.bg_0, R.drawable.bg_1, R.drawable.bg_2
+		});
+
+		// HPバーを生成する
+		hpBar = new HPBar(this);
+
+		// ボムの残弾数
+		bomsInfo = new BombsInfo(this);
+	}
+
+	/**
+	 * 敵の種類を示すenum
+	 *
+	 */
+	public enum ImageType {
+		Frisbee,
+		FrisbeeYellow,
+		FrisbeeGreen,
+		Tongari,
+		TongariPink,
+		TongariRed,
+		Boss;
+		public int getResouceId(){
+			switch (this) {
+			case Frisbee:
+				return R.drawable.enemy_00; // 赤フリスビーを読み込む
+			case FrisbeeYellow:
+				return R.drawable.enemy_00_y; // 黄色フリスビーを読み込む
+			case FrisbeeGreen:
+				return R.drawable.enemy_00_g; // 緑フリスビーを読み込む
+			case Tongari:
+				return R.drawable.enemy_01 ; // 青とんがりを読み込む
+			case TongariPink:
+				return R.drawable.enemy_01_p; // ピンクとんがりを読み込む
+			case TongariRed:
+				return R.drawable.enemy_01_r; // 赤とんがりを読み込む
+			case Boss:
+				return R.drawable.boss; // ボスを読み込む
+			default:
+				return R.drawable.enemy_00; // 赤フリスビーを読み込む
+			}
+		}
+	}
+
+	protected void addEnemy(ImageType imageType, MoveType moveType,AttackType attackType, int x, int y) {
+		EnemyFighterBase enemy = null;
+		enemy = new EnemyFighterBase(imageType,moveType,attackType,x,y, this);
+		//
+		//            case FrisbeeNotAttack:
+		//                enemy = new Frisbee(AttackType.Not, this);
+		//                break;
+		//            case FrisbeeStraightAttack:
+		//                enemy = new Frisbee(AttackType.ShotStraight, this);
+		//                break;
+		//            case FrisbeeSnipeAttack:
+		//               enemy = new Frisbee(AttackType.Snipe, this);
+		//                break;
+		//
+		//            case TongariAllDirection:
+		//                enemy = new Tongari(Tongari.AttackType.AllDirection, this);
+		//                break;
+		//            case TongariLaser:
+		//                enemy = new Tongari(Tongari.AttackType.Laser, this);
+		//                break;
+		//            case TongariLaserAndDirection:
+		//                enemy = new Tongari(Tongari.AttackType.LaserAndDirection, this);
+		//                break;
+		//            case BossMotherShip:
+		//                enemy = new MotherShip(this);
+		//                break;
+
+		enemy.setPosition(x, y);
+
+		// 移動タイプと敵の種類で呼び出しメソッドを変更する
+		{
+			switch (moveType) {
+			case Straight:
+				if (imageType.toString().startsWith("Tongari")) {
+					// "Tongari"系列なら移動速度を3にする
+					enemy.initMoveStraight(3.0f);
+				} else if (imageType.toString().startsWith("Frisbee")) {
+					// "Frisbee"系列
+					enemy.initMoveStraight(5.0f);
+				}
+				break;
+
+			case Curved:
+				if (imageType.toString().startsWith("Tongari")) {
+					// "Tongari"系列
+					enemy.initMoveCurve(45.0f, 3.0f, 0.05f);
+				} else if (imageType.toString().startsWith("Frisbee")) {
+					// "Frisbee"系列なら移動速度を5にする
+					enemy.initMoveCurve(70.0f, 3.0f, 0.2f);
+				}
+				break;
+
+			default:
+				break;
+			}
+		}
+		enemies.add(enemy);
+	}
+
+	/**
+	 * 敵の侵攻状態を更新する
+	 */
+	protected void updateEnemyInvasion() {
+
+		Iterator<StageEnemyData> iterator = stageEnemyDataList.iterator();
+		// 全データをチェックする
+		while (iterator.hasNext()) {
+			StageEnemyData stageEnemyData = iterator.next();
+
+			// 生成に成功したら、リストから排除する
+			if (stageEnemyData.create()) {
+				iterator.remove();
+			}
+		}
+	}
+
+	@Override
+	public void onFrameBegin(SceneManager manager) {
+		super.onFrameBegin(manager);
+
+		// ボムボタンを更新する
+		bombButton.update();
+
+		// 敵の侵略状態を更新する
+		updateEnemyInvasion();
+
+		background.scroll(10);
+	}
+
+	@Override
+	public void onFrameDraw(SceneManager manager) {
+		// 背景を描画する
+		{
+			background.draw();
+		}
+
+		// プレイヤーが死んでいなければ描画処理を行う
+		if (!player.isDead()) {
+			player.draw(); // プレイヤーを描画する
+		}
+
+		// 敵を全て描画する
+		for (EnemyFighterBase enemy : enemies) {
+			enemy.draw();
+		}
+
+		// 弾を全て描画する
+		for (BulletBase bullet : bullets) {
+			bullet.draw();
+		}
+
+		// エフェクトを全て描画する
+		for (EffectBase effect : effects) {
+			effect.draw();
+		}
+
+		// 画面のプレイエリア外を塗りつぶす
+		{
+			// 左側を塗りつぶす
+			getSpriteManager().fillRect(
+					// 起点のXY座標
+					0, 0,
+					// 幅・高さ
+					Define.PLAY_AREA_LEFT, Define.VIRTUAL_DISPLAY_HEIGHT,
+					// 描画色
+					Color.toColorRGBA(255, 255, 255, 255));
+
+			// 右側を塗りつぶす
+			getSpriteManager().fillRect(
+					// 起点のXY座標
+					Define.PLAY_AREA_RIGHT, 0,
+					// 幅・高さ
+					Define.VIRTUAL_DISPLAY_WIDTH - Define.PLAY_AREA_RIGHT, Define.VIRTUAL_DISPLAY_HEIGHT,
+					// 描画色
+					Color.toColorRGBA(255, 255, 255, 255));
+		}
+
+		hpBar.draw(); // HPバーを描画する
+		bomsInfo.draw(); // ボム情報を描画する
+
+		shotButton.draw(); // 攻撃ボタンを描画する
+		bombButton.draw(); // ボムボタンを描画する
+	}
+
+	/**
+	 * 強制的なゲームクリアフラグを立てる
+	 * @param gameClear
+	 */
+	public void setGameClear(boolean gameClear) {
+		this.gameClear = gameClear;
+	}
+
+	/**
+	 * 全ての敵が出現済みで、敵が居なくなったらゲームクリア
+	 */
+	@Override
+	public boolean isGameclear() {
+		if (gameClear) {
+			return true;
+		}
+		return enemies.isEmpty() && stageEnemyDataList.isEmpty();
+	}
+
+	/**
+	 * ゲームオーバー条件は自機の撃墜のみ
+	 */
+	@Override
+	public boolean isGameover() {
+		return player.isDead(); // プレイヤーが撃墜されたらゲームオーバー
+	}
+}

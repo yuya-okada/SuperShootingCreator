@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="spinnermoveType">
+        <item>直進</item>
+        <item>波線</item>
+    </string-array>
+    <string-array name="spinnerattackType">
+        <item>通常</item>
+        <item>狙撃</item>
+        <item>全方位弾</item>
+        <item>レーザー</item>
+        <item>全方位弾＆レーザー</item>
+        <item>なにもしない</item>
+        
+    </string-array>
+    <string-array name="spinnerimageType">
+        <item>円盤A</item>
+        <item>円盤B</item>
+        <item>円盤C</item>
+        <item>戦艦A</item>
+        <item>戦艦B</item>
+        <item>戦艦C</item>
+        <item>保存された画像</item>
+        
+        
+    </string-array>
+
+</resources>

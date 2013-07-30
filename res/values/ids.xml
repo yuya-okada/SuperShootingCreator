@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <item name="x" type="id"/>
+    <item name="y" type="id"/>
+
+</resources>
