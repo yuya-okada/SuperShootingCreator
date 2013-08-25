@@ -1,9 +1,8 @@
 package com.eaglesakura.game.foxone.bullet;
 
-import java.util.List;
-
 import android.graphics.Rect;
 
+import com.eaglesakura.game.bundle.ResourceDisplayable;
 import com.eaglesakura.game.foxone.Define;
 import com.eaglesakura.game.foxone.R;
 import com.eaglesakura.game.foxone.effect.BombExplosion;
@@ -13,6 +12,8 @@ import com.eaglesakura.game.foxone.scene.GameSceneBase;
 import com.eaglesakura.game.foxone.scene.PlaySceneBase;
 import com.eaglesakura.lib.android.game.math.Vector2;
 import com.eaglesakura.lib.android.game.util.GameUtil;
+
+import java.util.List;
 
 public class Bomb extends BulletBase {
 
@@ -34,7 +35,7 @@ public class Bomb extends BulletBase {
     public Bomb(GameSceneBase scene, FighterBase shooter) {
         super(scene, shooter);
 
-        sprite = loadSprite(R.drawable.bomb); // ボム画像を読み込む
+        sprite = loadSprite(new ResourceDisplayable(R.drawable.bomb)); // ボム画像を読み込む
         setPosition(shooter.getPositionX(), shooter.getPositionY());
 
         // 画面の中心に着弾させる

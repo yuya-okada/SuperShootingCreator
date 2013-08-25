@@ -2,6 +2,7 @@ package com.eaglesakura.game.foxone.input;
 
 import android.graphics.Rect;
 
+import com.eaglesakura.game.bundle.ResourceDisplayable;
 import com.eaglesakura.game.foxone.Define;
 import com.eaglesakura.game.foxone.GameSprite;
 import com.eaglesakura.game.foxone.R;
@@ -25,9 +26,9 @@ public class JoyStick extends GameSprite {
     public JoyStick(GameSceneBase scene) {
         super(scene);
         // ジョイスティックの土台を読み込む
-        sprite = loadSprite(R.drawable.ui_stickbase);
+        sprite = loadSprite(new ResourceDisplayable(R.drawable.ui_stickbase));
 
-        stick = loadSprite(R.drawable.ui_stick); // スティック本体の読み込み
+        stick = loadSprite(new ResourceDisplayable(R.drawable.ui_stick)); // スティック本体の読み込み
 
         setPosition(70, Define.VIRTUAL_DISPLAY_HEIGHT - 120); // スプライトの位置を調整
     }

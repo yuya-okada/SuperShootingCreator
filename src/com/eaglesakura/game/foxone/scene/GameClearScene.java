@@ -1,5 +1,6 @@
 package com.eaglesakura.game.foxone.scene;
 
+import com.eaglesakura.game.bundle.ResourceDisplayable;
 import com.eaglesakura.game.foxone.Define;
 import com.eaglesakura.game.foxone.FoxOne;
 import com.eaglesakura.game.foxone.R;
@@ -34,6 +35,7 @@ public class GameClearScene extends GameSceneBase {
 
     public GameClearScene(FoxOne game) {
         super(game);
+
     }
 
     @Override
@@ -42,20 +44,20 @@ public class GameClearScene extends GameSceneBase {
         this.before = before;
 
         // ゲームクリア画像を読み込む
-        gameclearImage = new Sprite(loadImageDrawable(R.drawable.gameclear));
+        gameclearImage = new Sprite(loadImageDrawable(new ResourceDisplayable(R.drawable.gameclear)));
 
         // 画像を真ん中へ移動させる
         gameclearImage.setSpritePosition(Define.VIRTUAL_DISPLAY_WIDTH / 2, Define.VIRTUAL_DISPLAY_HEIGHT / 2);
 
         {
             // ゲームクリア画像を読み込む
-            gameclearImage = new Sprite(loadImageDrawable(R.drawable.gameclear));
+            gameclearImage = new Sprite(loadImageDrawable(new ResourceDisplayable(R.drawable.gameclear)));
             // 画像を真ん中へ移動させる
             gameclearImage.setSpritePosition(Define.VIRTUAL_DISPLAY_WIDTH / 2, Define.VIRTUAL_DISPLAY_HEIGHT / 2);
         }
         {
             // イベント一枚絵を読み込む
-            eventImage = new Sprite(loadImageDrawable(R.drawable.gameclear_boss));
+            eventImage = new Sprite(loadImageDrawable(new ResourceDisplayable(R.drawable.gameclear_boss)));
             // 画像を真ん中へ移動させる
             eventImage.setSpritePosition(Define.VIRTUAL_DISPLAY_WIDTH / 2, 0, Sprite.POSITION_CENTER_X
                     | Sprite.POSITION_TOP);

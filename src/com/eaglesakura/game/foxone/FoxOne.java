@@ -7,6 +7,7 @@ import com.eaglesakura.lib.android.game.loop.SpriteGameLoopManagerBase;
 import com.eaglesakura.lib.android.game.scene.SceneManager;
 
 public class FoxOne extends SpriteGameLoopManagerBase {
+    Context context;
 
     /**
      * シーン管理クラスを追加
@@ -15,6 +16,8 @@ public class FoxOne extends SpriteGameLoopManagerBase {
 
     public FoxOne(Context context, ILoopParent loopParent) {
         super(context, loopParent);
+
+        this.context = context;
     }
 
     @Override
@@ -22,7 +25,7 @@ public class FoxOne extends SpriteGameLoopManagerBase {
         super.onGameInitialize();
 
         // 最初のシーンを登録する
-        sceneManager.setNextScene(new TitleScene(this));
+        sceneManager.setNextScene(new TitleScene(this,context));
     }
 
     @Override

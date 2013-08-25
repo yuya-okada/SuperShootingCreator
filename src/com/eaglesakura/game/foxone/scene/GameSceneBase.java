@@ -1,14 +1,18 @@
 package com.eaglesakura.game.foxone.scene;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import com.eaglesakura.game.bundle.Displayable;
+import com.eaglesakura.game.bundle.DisplayableType;
+import com.eaglesakura.game.bundle.ResourceDisplayable;
 import com.eaglesakura.game.foxone.FoxOne;
 import com.eaglesakura.lib.android.game.graphics.ImageBase;
 import com.eaglesakura.lib.android.game.graphics.gl11.SpriteManager;
 import com.eaglesakura.lib.android.game.input.MultiTouchInput;
 import com.eaglesakura.lib.android.game.scene.SceneBase;
 import com.eaglesakura.lib.android.game.sound.SoundManager;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public abstract class GameSceneBase extends SceneBase {
     /**
@@ -24,7 +28,9 @@ public abstract class GameSceneBase extends SceneBase {
     /**
      * 読み込み済みの画像をキャッシュしておく
      */
-    Map<Integer, ImageBase> imageCache = new HashMap<Integer, ImageBase>();
+    //Map<Integer, ImageBase> imageCache = new HashMap<Integer, ImageBase>();
+    Map<UUID, ImageBase> imageCache = new HashMap<UUID, ImageBase>();
+
 
     protected GameSceneBase(FoxOne game) {
         this.game = game;
@@ -56,20 +62,25 @@ public abstract class GameSceneBase extends SceneBase {
 
     /**
      * drawableのIDを指定して画像を読み込む。
-     * @param drawableId
+     * @param displayable
      * @return
      */
-    public ImageBase loadImageDrawable(int drawableId) {
+    public ImageBase loadImageDrawable(Displayable displayable) {
         // まずはキャッシュから画像を探す
-        ImageBase result = imageCache.get(drawableId);
+        ImageBase result = imageCache.get(displayable.getUUId());
 
         // キャッシュが見つからなかったら
         if (result == null) {
-            // 新たに画像を読み込む
-            result = game.loadImageDrawable(drawableId);
 
-            // キャッシュへ登録する
-            imageCache.put(drawableId, result);
+            if(displayable.getType() == DisplayableType.File){
+
+            }else{
+                int resId = ((ResourceDisplayable)displayable).getResourceID();
+            // 新たに画像を読み込む
+              result = game.loadImageDrawable(resId);
+              // キャッシュへ登録する
+              imageCache.put(displayable.getUUId(), result);
+            }
         }
 
         // リソースを返す

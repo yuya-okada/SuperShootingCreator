@@ -1,5 +1,6 @@
 package com.eaglesakura.game.foxone.scene;
 
+import com.eaglesakura.game.bundle.ResourceDisplayable;
 import com.eaglesakura.game.foxone.Define;
 import com.eaglesakura.game.foxone.FoxOne;
 import com.eaglesakura.game.foxone.R;
@@ -20,8 +21,10 @@ public class GameOverScene extends GameSceneBase {
      */
     SceneBase before = null;
 
+
     public GameOverScene(FoxOne game) {
         super(game);
+
     }
 
     @Override
@@ -31,7 +34,7 @@ public class GameOverScene extends GameSceneBase {
         this.before = before;
 
         // ゲームオーバー画像を読み込む
-        gameoverImage = new Sprite(loadImageDrawable(R.drawable.gameover));
+        gameoverImage = new Sprite(loadImageDrawable(new ResourceDisplayable(R.drawable.gameover)));
 
         // 画像を真ん中へ移動させる
         gameoverImage.setSpritePosition(Define.VIRTUAL_DISPLAY_WIDTH / 2, Define.VIRTUAL_DISPLAY_HEIGHT / 2);

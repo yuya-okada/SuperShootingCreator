@@ -1,5 +1,6 @@
 package com.eaglesakura.game.foxone.ui;
 
+import com.eaglesakura.game.bundle.ResourceDisplayable;
 import com.eaglesakura.game.foxone.Define;
 import com.eaglesakura.game.foxone.R;
 import com.eaglesakura.game.foxone.fighter.PlayerFighter;
@@ -31,7 +32,7 @@ public class BombsInfo {
         this.player = scene.getPlayer();
 
         // 必要な画像を読み込む
-        bombImage = new Sprite(scene.loadImageDrawable(R.drawable.bomb));
+        bombImage = new Sprite(scene.loadImageDrawable(new ResourceDisplayable(R.drawable.bomb)));
         // ボムは横向きに表示する
         bombImage.setRotateDegree(90);
     }

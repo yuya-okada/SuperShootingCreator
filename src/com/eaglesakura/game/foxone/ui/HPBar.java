@@ -1,5 +1,6 @@
 package com.eaglesakura.game.foxone.ui;
 
+import com.eaglesakura.game.bundle.ResourceDisplayable;
 import com.eaglesakura.game.foxone.Define;
 import com.eaglesakura.game.foxone.R;
 import com.eaglesakura.game.foxone.fighter.PlayerFighter;
@@ -42,10 +43,10 @@ public class HPBar {
         this.player = scene.getPlayer();
 
         // 必要な画像を読み込む
-        frame = new Sprite(scene.loadImageDrawable(R.drawable.ui_hp_frame));
-        barRed = new Sprite(scene.loadImageDrawable(R.drawable.ui_hp_r));
-        barYellow = new Sprite(scene.loadImageDrawable(R.drawable.ui_hp_y));
-        barGreen = new Sprite(scene.loadImageDrawable(R.drawable.ui_hp_g));
+        frame = new Sprite(scene.loadImageDrawable(new ResourceDisplayable(R.drawable.ui_hp_frame)));
+        barRed = new Sprite(scene.loadImageDrawable(new ResourceDisplayable(R.drawable.ui_hp_r)));
+        barYellow = new Sprite(scene.loadImageDrawable(new ResourceDisplayable(R.drawable.ui_hp_y)));
+        barGreen = new Sprite(scene.loadImageDrawable(new ResourceDisplayable(R.drawable.ui_hp_g)));
     }
 
     public void draw() {

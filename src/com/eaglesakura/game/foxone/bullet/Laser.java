@@ -2,6 +2,7 @@ package com.eaglesakura.game.foxone.bullet;
 
 import android.graphics.Rect;
 
+import com.eaglesakura.game.bundle.ResourceDisplayable;
 import com.eaglesakura.game.foxone.Define;
 import com.eaglesakura.game.foxone.R;
 import com.eaglesakura.game.foxone.fighter.FighterBase;
@@ -64,8 +65,8 @@ public class Laser extends BulletBase {
         // 本体のスプライトには空画像を入れておく
         sprite = new Sprite(new ImageStub(1, 1));
 
-        laserMain = loadSprite(R.drawable.laser_main);
-        laserStart = loadSprite(R.drawable.laser_start);
+        laserMain = loadSprite(new ResourceDisplayable(R.drawable.laser_main));
+        laserStart = loadSprite(new ResourceDisplayable(R.drawable.laser_start));
     }
 
     @Override

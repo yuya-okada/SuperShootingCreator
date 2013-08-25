@@ -1,11 +1,9 @@
 package com.eaglesakura.game.foxone.fighter.enemy;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.graphics.Rect;
 import android.util.Log;
 
+import com.eaglesakura.game.bundle.Displayable;
 import com.eaglesakura.game.foxone.Define;
 import com.eaglesakura.game.foxone.R;
 import com.eaglesakura.game.foxone.bullet.BulletBase;
@@ -16,7 +14,9 @@ import com.eaglesakura.game.foxone.bullet.SnipeBullet;
 import com.eaglesakura.game.foxone.fighter.FighterBase;
 import com.eaglesakura.game.foxone.scene.GameSceneBase;
 import com.eaglesakura.game.foxone.scene.PlaySceneBase;
-import com.eaglesakura.game.foxone.scene.GameSceneStage1.ImageType;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 //public abstract class EnemyFighterBase extends FighterBase {
 public class EnemyFighterBase extends FighterBase {
@@ -62,7 +62,7 @@ public class EnemyFighterBase extends FighterBase {
 	 */
 	protected int frameCount = 0;
 
-	ImageType imageType = ImageType.Frisbee;
+	Displayable image = null;
 
 	/**
 	 * 移動手段を列挙する
@@ -124,13 +124,13 @@ public class EnemyFighterBase extends FighterBase {
 	 */
 	int y;
 
-	public EnemyFighterBase(int x,int y) {
-		this(ImageType.Frisbee ,MoveType.Straight,AttackType.Not,x,y,null);
+	//public EnemyFighterBase(int x,int y) {
+		//this(ImageType.Frisbee ,MoveType.Straight,AttackType.Not,x,y,null);
+	//}
+	public EnemyFighterBase(Displayable image,MoveType moveType,AttackType attackType,int x,int y) {
+		this(image,moveType,attackType,x,y,null);
 	}
-	public EnemyFighterBase(ImageType imageType,MoveType moveType,AttackType attackType,int x,int y) {
-		this(imageType,moveType,attackType,x,y,null);
-	}
-	public EnemyFighterBase(ImageType imageType,MoveType moveType,AttackType attackType,int x,int y,GameSceneBase scene) {
+	public EnemyFighterBase(Displayable image,MoveType moveType,AttackType attackType,int x,int y,GameSceneBase scene) {
 		super(scene);
 
 		
@@ -143,11 +143,11 @@ public class EnemyFighterBase extends FighterBase {
 
 		this.moveType = moveType;
 
-		this.imageType = imageType;
+		this.image = image;
 		// 攻撃手段によって、敵の見た目を変化させる
 		
 		if(scene != null){
-			loadSprite();
+			sprite = loadSprite(image);
 		}
 	}
 
@@ -378,7 +378,7 @@ public class EnemyFighterBase extends FighterBase {
 		try {
 			enemy.put("attackType",attackType.toString());
 			enemy.put("moveType",moveType.toString());
-			enemy.put("imageType",imageType.toString());
+			enemy.put("imageType",image.toJSON());
 			enemy.put("x",x);
 			enemy.put("y",y);
 			
@@ -389,41 +389,11 @@ public class EnemyFighterBase extends FighterBase {
 		}
 		return null;
 	}
-	
-	public void loadSprite(){
-		switch (imageType) {
-		case Frisbee:
-			sprite = loadSprite(R.drawable.enemy_00); // 赤フリスビーを読み込む
-			break;
-		case FrisbeeYellow:
-			sprite = loadSprite(R.drawable.enemy_00_y); // 黄色フリスビーを読み込む
-			break;
-		case FrisbeeGreen:
-			sprite = loadSprite(R.drawable.enemy_00_g); // 緑フリスビーを読み込む
-			break;
-		case Tongari:
-			sprite = loadSprite(R.drawable.enemy_01); // 青とんがりを読み込む
-			break;
-		case TongariPink:
-			sprite = loadSprite(R.drawable.enemy_01_p); // ピンクとんがりを読み込む
-			break;
-		case TongariRed:
-			sprite = loadSprite(R.drawable.enemy_01_r); // 赤とんがりを読み込む
-			break;
-		case Boss:
-			sprite = loadSprite(R.drawable.boss); // ボスを読み込む
-			break;
-		default:
-			sprite = loadSprite(R.drawable.enemy_00); // 赤フリスビーを読み込む
-			hp = 1;
-			break;
-		}
-	}
-	
+
 	@Override
 	public void setScene(GameSceneBase scene){
 		super.setScene(scene);
-		loadSprite();
+		sprite = loadSprite(image);
 	}
 	
 	public int getX(){

@@ -1,47 +1,34 @@
 package com.eaglesakura.game.edit;
 
-import java.io.FileOutputStream;
-import java.util.ArrayList;
-
-import org.json.JSONArray;
-
-import com.eaglesakura.game.foxone.Define;
-import com.eaglesakura.game.foxone.InvaderGameActivity;
-import com.eaglesakura.game.foxone.R;
-import com.eaglesakura.game.foxone.R.layout;
-import com.eaglesakura.game.foxone.R.menu;
-import com.eaglesakura.game.foxone.fighter.enemy.EnemyFighterBase;
-import com.eaglesakura.game.foxone.fighter.enemy.EnemyFighterBase.AttackType;
-import com.eaglesakura.game.foxone.fighter.enemy.EnemyFighterBase.MoveType;
-import com.eaglesakura.game.foxone.input.AttackButton;
-import com.eaglesakura.game.foxone.scene.GameSceneStage1;
-import com.eaglesakura.game.foxone.scene.GameSceneStage1.ImageType;
-
-import android.os.Bundle;
-import android.os.FileObserver;
-import android.preference.PreferenceManager;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.graphics.Color;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
-import android.view.Menu;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.AbsoluteLayout;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
-import android.widget.Toast;
+
+import com.eaglesakura.game.bundle.Displayable;
+import com.eaglesakura.game.foxone.InvaderGameActivity;
+import com.eaglesakura.game.foxone.R;
+import com.eaglesakura.game.foxone.fighter.enemy.EnemyFighterBase;
+import com.eaglesakura.game.foxone.fighter.enemy.EnemyFighterBase.AttackType;
+import com.eaglesakura.game.foxone.fighter.enemy.EnemyFighterBase.MoveType;
+
+import org.json.JSONArray;
+
+import java.io.FileOutputStream;
+import java.util.ArrayList;
 
 public class MainActivity extends Activity implements View.OnClickListener{
 	ArrayList<EnemyFighterBase> enemyBaseArray = new ArrayList<EnemyFighterBase>();
@@ -146,7 +133,6 @@ public class MainActivity extends Activity implements View.OnClickListener{
 	}
 	/**
 	 * テストプレイに遷移
-	 * @param v
 	 */
 	public void IntentTestPlay(){
 
@@ -241,6 +227,8 @@ public class MainActivity extends Activity implements View.OnClickListener{
 			}
 		});
 
+
+
 		Intent intent = new Intent(this,ConfigurationEnemyActivity.class);
 		intent.putExtra("x", x);
 		intent.putExtra("y", y);
@@ -253,11 +241,14 @@ public class MainActivity extends Activity implements View.OnClickListener{
 			if(resultcode == RESULT_OK){
 				MoveType moveType = MoveType.valueOf((String) data.getExtras().get("MoveType"));
 				AttackType attackType = AttackType.valueOf((String) data.getExtras().get("AttackType"));
-				ImageType imageType = ImageType.valueOf((String)data.getExtras().get("ImageType"));
+				//ImageType imageType = ImageType.valueOf((String)data.getExtras().get("ImageType"));
 				int x = data.getIntExtra("x", 0);
 				int y = data.getIntExtra("y", 0);
-				button.get(100-y).get(x).setImageDrawable(getResources().getDrawable(imageType.getResouceId()));
-				EnemyFighterBase enemyFighterBase = new EnemyFighterBase(imageType,moveType,attackType,x, y);
+
+                Displayable resourceDisplayable = data.getExtras().getParcelable("ImageType");
+
+                button.get(100-y).get(x).setImageDrawable(resourceDisplayable.getDrawable(this));
+                EnemyFighterBase enemyFighterBase = new EnemyFighterBase(resourceDisplayable,moveType,attackType,x, y);
 				enemyBaseArray.add(enemyFighterBase);
 			}
 		}			
@@ -293,7 +284,8 @@ public class MainActivity extends Activity implements View.OnClickListener{
 			FileOutputStream outputStream;
 
 			try{
-				outputStream = openFileOutput(stageName + ".json",Context.MODE_PRIVATE);
+                outputStream = openFileOutput(stageName + ".json", Context.MODE_PRIVATE);
+                String s = enemyJSON.toString();
 				outputStream.write(enemyJSON.toString().getBytes());
 				outputStream.close();
 			}catch(Exception e){

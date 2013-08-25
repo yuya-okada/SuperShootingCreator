@@ -2,6 +2,7 @@ package com.eaglesakura.game.foxone;
 
 import android.graphics.Rect;
 
+import com.eaglesakura.game.bundle.Displayable;
 import com.eaglesakura.game.foxone.scene.GameSceneBase;
 import com.eaglesakura.lib.android.game.graphics.ImageBase;
 import com.eaglesakura.lib.android.game.graphics.Sprite;
@@ -39,25 +40,25 @@ public abstract class GameSprite {
 
     /**
      * drawableの画像からスプライトを作成する。
-     * @param drawableId
+     * @param displayable
      */
-    protected Sprite loadSprite(int drawableId) {
-        ImageBase image = scene.loadImageDrawable(drawableId);
+    protected Sprite loadSprite(Displayable displayable) {
+        ImageBase image = scene.loadImageDrawable(displayable);
         Sprite result = new Sprite(image);
         return result;
     }
 
     /**
         * アニメーションスプライトを作成する
-        * @param drawableId
-        * @param gridX
-        * @param gridY
+        * @param displayable
+        * @param blockWidth
+        * @param blockHeight
         * @param komaNum
         * @return
         */
-    protected Sprite loadAnimatedSprite(int drawableId, int blockWidth, int blockHeight, int komaNum) {
+    protected Sprite loadAnimatedSprite(Displayable displayable, int blockWidth, int blockHeight, int komaNum) {
         // 通常スプライトを作成する
-        Sprite result = loadSprite(drawableId);
+        Sprite result = loadSprite(displayable);
 
         // スプライトの中身をコマとして切り分ける
         result.getMaster().addAnimationFrames(blockWidth, blockHeight, 0, komaNum);

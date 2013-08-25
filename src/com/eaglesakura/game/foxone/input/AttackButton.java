@@ -1,5 +1,6 @@
 package com.eaglesakura.game.foxone.input;
 
+import com.eaglesakura.game.bundle.ResourceDisplayable;
 import com.eaglesakura.game.foxone.Define;
 import com.eaglesakura.game.foxone.GameSprite;
 import com.eaglesakura.game.foxone.R;
@@ -26,8 +27,8 @@ public class AttackButton extends GameSprite {
     public AttackButton(GameSceneBase scene) {
         super(scene);
 
-        release = loadSprite(R.drawable.ui_shot); // 離している時の画像
-        press = loadSprite(R.drawable.ui_shot_p); // 押している時の画像
+        release = loadSprite(new ResourceDisplayable(R.drawable.ui_shot)); // 離している時の画像
+        press = loadSprite(new ResourceDisplayable(R.drawable.ui_shot_p)); // 押している時の画像
 
         sprite = release; // まずは離している時の画像を表示したい
 
@@ -37,8 +38,8 @@ public class AttackButton extends GameSprite {
     }
 
     public void initBombButton() {
-        release = loadSprite(R.drawable.ui_bomb); // 離してる時の画像
-        press = loadSprite(R.drawable.ui_bomb_p); // 押してる時の画像
+        release = loadSprite(new ResourceDisplayable(R.drawable.ui_bomb)); // 離してる時の画像
+        press = loadSprite(new ResourceDisplayable(R.drawable.ui_bomb_p)); // 押してる時の画像
 
         sprite = release; // まずは押してる時の画像を表示したい
 

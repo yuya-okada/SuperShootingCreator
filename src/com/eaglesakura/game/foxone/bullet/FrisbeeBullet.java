@@ -1,5 +1,6 @@
 package com.eaglesakura.game.foxone.bullet;
 
+import com.eaglesakura.game.bundle.ResourceDisplayable;
 import com.eaglesakura.game.foxone.R;
 import com.eaglesakura.game.foxone.fighter.FighterBase;
 import com.eaglesakura.game.foxone.scene.GameSceneBase;
@@ -10,7 +11,7 @@ public class FrisbeeBullet extends BulletBase {
     public FrisbeeBullet(GameSceneBase scene, FighterBase shooter) {
         super(scene, shooter);
 
-        sprite = loadSprite(R.drawable.bullet_enemy); // 弾の画像を保持する
+        sprite = loadSprite(new ResourceDisplayable(R.drawable.bullet_enemy)); // 弾の画像を保持する
         setPosition(shooter.getPositionX(), shooter.getPositionY()); // 位置を発射した戦闘機に合わせる
 
         // サウンドを鳴らす

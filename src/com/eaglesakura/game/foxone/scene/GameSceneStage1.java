@@ -1,17 +1,11 @@
 package com.eaglesakura.game.foxone.scene;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
+import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 
+import com.eaglesakura.game.bundle.Displayable;
+import com.eaglesakura.game.bundle.DisplayableFactory;
 import com.eaglesakura.game.foxone.Define;
 import com.eaglesakura.game.foxone.FoxOne;
 import com.eaglesakura.game.foxone.R;
@@ -19,8 +13,8 @@ import com.eaglesakura.game.foxone.bg.ScrollBackground;
 import com.eaglesakura.game.foxone.bullet.BulletBase;
 import com.eaglesakura.game.foxone.effect.EffectBase;
 import com.eaglesakura.game.foxone.fighter.enemy.EnemyFighterBase;
-import com.eaglesakura.game.foxone.fighter.enemy.EnemyFighterBase.MoveType;
 import com.eaglesakura.game.foxone.fighter.enemy.EnemyFighterBase.AttackType;
+import com.eaglesakura.game.foxone.fighter.enemy.EnemyFighterBase.MoveType;
 import com.eaglesakura.game.foxone.input.AttackButton;
 import com.eaglesakura.game.foxone.ui.BombsInfo;
 import com.eaglesakura.game.foxone.ui.HPBar;
@@ -28,7 +22,18 @@ import com.eaglesakura.lib.android.game.graphics.Color;
 import com.eaglesakura.lib.android.game.scene.SceneBase;
 import com.eaglesakura.lib.android.game.scene.SceneManager;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 public class GameSceneStage1 extends PlaySceneBase {
+    Context context;
 
 	/**
 	 * 背景素材
@@ -55,13 +60,15 @@ public class GameSceneStage1 extends PlaySceneBase {
 	 */
 	boolean gameClear = false;
 
-	public GameSceneStage1(FoxOne game) {
+	public GameSceneStage1(FoxOne game,Context context) {
 		super(game);
+
+        this.context = context;
 	}
 
 	/**
 	 * 敵の生成情報を管理するクラス
-	 * @author TAKESHI YAMASHITA
+	 * @author
 	 *
 	 */
 	class StageEnemyData {
@@ -73,7 +80,7 @@ public class GameSceneStage1 extends PlaySceneBase {
 		/**
 		 * 出現させる敵タイプ
 		 */
-		ImageType imageType;
+		Displayable enemyImage;
 
 		/**
 		 * 攻撃タイプ
@@ -98,14 +105,14 @@ public class GameSceneStage1 extends PlaySceneBase {
 		/**
 		 * 初期値を設定して敵情報を作成する
 		 * @param createFrame
-		 * @param enemyType
+		 * @param enemy
 		 * @param moveType
 		 * @param createX
 		 * @param createY
 		 */
-		public StageEnemyData(int createFrame, ImageType enemyType, MoveType moveType, AttackType attackType,float createX, float createY) {
+		public StageEnemyData(int createFrame, Displayable enemy, MoveType moveType, AttackType attackType,float createX, float createY) {
 			this.createFrame = createFrame;
-			this.imageType = enemyType;
+			this.enemyImage = enemy;
 			this.moveType = moveType;
 			this.attackType = attackType;
 			this.createX = createX;
@@ -121,10 +128,9 @@ public class GameSceneStage1 extends PlaySceneBase {
 			if (frameCount < createFrame) {
 				return false;
 			}
-			Log.d("","でけでけお"+imageType+moveType+attackType+createX+createY);
 
 			// 敵を作成する
-			addEnemy(imageType, moveType,attackType, (int)createX, (int)createY);
+			addEnemy(enemyImage, moveType,attackType, (int)createX, (int)createY);
 
 			return true;
 		}
@@ -157,15 +163,23 @@ public class GameSceneStage1 extends PlaySceneBase {
 			for(int i=0;i<enemies.length();i++){
 				JSONObject enemy = enemies.getJSONObject(i);
 				AttackType attackType = AttackType.valueOf(enemy.getString("attackType")); 
-				MoveType moveType = MoveType.valueOf(enemy.getString("moveType")); 
-				ImageType imageType = ImageType.valueOf(enemy.getString("imageType")); 
+				MoveType moveType = MoveType.valueOf(enemy.getString("moveType"));
+
+                JSONObject o = enemy.getJSONObject("imageType");
+                Log.d("foobar", o.toString());
+                Displayable displayable = DisplayableFactory.createFromJSON(enemy.getJSONObject("imageType"));
+
+                    //ファイル名で指定されていた場合
+                    //ImageTypeで指定されていた場合
+
+
 				float createX = PLAY_AREA_WIDTH / 5f * enemy.getInt("x");
 				createX += PLAY_AREA_WIDTH / 5f / 2f;
 				createX += Define.PLAY_AREA_LEFT;
 				float createY = Define.VIRTUAL_DISPLAY_HEIGHT-PLAY_AREA_WIDTH / 5 * enemy.getInt("y");
 
 
-				stageEnemyDataList.add(new StageEnemyData(createFrame, imageType, moveType,attackType, createX, createY));
+				stageEnemyDataList.add(new StageEnemyData(createFrame, displayable, moveType,attackType, createX, createY));
 
 			}
 			// 1ラインにつき30フレーム後に生成する
@@ -208,32 +222,34 @@ public class GameSceneStage1 extends PlaySceneBase {
 		Tongari,
 		TongariPink,
 		TongariRed,
+        Custom,
 		Boss;
-		public int getResouceId(){
+		public int getResource(){
+            Drawable drawable;
 			switch (this) {
 			case Frisbee:
 				return R.drawable.enemy_00; // 赤フリスビーを読み込む
 			case FrisbeeYellow:
-				return R.drawable.enemy_00_y; // 黄色フリスビーを読み込む
+                return R.drawable.enemy_00_y; // 黄色フリスビーを読み込む
 			case FrisbeeGreen:
-				return R.drawable.enemy_00_g; // 緑フリスビーを読み込む
+                return R.drawable.enemy_00_g; // 緑フリスビーを読み込む
 			case Tongari:
-				return R.drawable.enemy_01 ; // 青とんがりを読み込む
+                return R.drawable.enemy_01; // 青とんがりを読み込む
 			case TongariPink:
-				return R.drawable.enemy_01_p; // ピンクとんがりを読み込む
+                return R.drawable.enemy_01_p; // ピンクとんがりを読み込む
 			case TongariRed:
-				return R.drawable.enemy_01_r; // 赤とんがりを読み込む
+                return R.drawable.enemy_01_r; // 赤とんがりを読み込む
 			case Boss:
-				return R.drawable.boss; // ボスを読み込む
+                return R.drawable.boss; // ボスを読み込む
 			default:
-				return R.drawable.enemy_00; // 赤フリスビーを読み込む
+                return R.drawable.enemy_00; // 赤フリスビーを読み込む
 			}
 		}
 	}
 
-	protected void addEnemy(ImageType imageType, MoveType moveType,AttackType attackType, int x, int y) {
+	protected void addEnemy(Displayable image, MoveType moveType,AttackType attackType, int x, int y) {
 		EnemyFighterBase enemy = null;
-		enemy = new EnemyFighterBase(imageType,moveType,attackType,x,y, this);
+		enemy = new EnemyFighterBase(image,moveType,attackType,x,y, this);
 		//
 		//            case FrisbeeNotAttack:
 		//                enemy = new Frisbee(AttackType.Not, this);
@@ -262,6 +278,7 @@ public class GameSceneStage1 extends PlaySceneBase {
 
 		// 移動タイプと敵の種類で呼び出しメソッドを変更する
 		{
+            /*
 			switch (moveType) {
 			case Straight:
 				if (imageType.toString().startsWith("Tongari")) {
@@ -286,6 +303,8 @@ public class GameSceneStage1 extends PlaySceneBase {
 			default:
 				break;
 			}
+
+			*/
 		}
 		enemies.add(enemy);
 	}

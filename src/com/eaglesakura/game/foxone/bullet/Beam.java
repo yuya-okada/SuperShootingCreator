@@ -2,6 +2,7 @@ package com.eaglesakura.game.foxone.bullet;
 
 import android.graphics.Rect;
 
+import com.eaglesakura.game.bundle.ResourceDisplayable;
 import com.eaglesakura.game.foxone.Define;
 import com.eaglesakura.game.foxone.R;
 import com.eaglesakura.game.foxone.fighter.FighterBase;
@@ -62,12 +63,12 @@ public class Beam extends BulletBase {
 
         {
             // ビーム画像とアニメーションを読み込む
-            beam = loadSprite(R.drawable.beam_main);
+            beam = loadSprite(new ResourceDisplayable(R.drawable.beam_main));
             beam.getMaster().addAnimationFrames(256, 1024, 0, 4);
         }
         {
             // チャージ画像とアニメーションを読み込む
-            charge = loadSprite(R.drawable.beam_charge);
+            charge = loadSprite(new ResourceDisplayable(R.drawable.beam_charge));
             charge.getMaster().addAnimationFrames(256, 256, 0, 14);
         }
     }

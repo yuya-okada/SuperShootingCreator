@@ -1,27 +1,20 @@
 package com.eaglesakura.game.edit;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Spinner;
+
+import com.eaglesakura.game.bundle.FileDisplayable;
+import com.eaglesakura.game.bundle.ImageResourceDisplayable;
 import com.eaglesakura.game.foxone.R;
-import com.eaglesakura.game.foxone.R.layout;
-import com.eaglesakura.game.foxone.R.menu;
-import com.eaglesakura.game.foxone.fighter.enemy.EnemyFighterBase;
 import com.eaglesakura.game.foxone.fighter.enemy.EnemyFighterBase.AttackType;
 import com.eaglesakura.game.foxone.fighter.enemy.EnemyFighterBase.MoveType;
 import com.eaglesakura.game.foxone.scene.GameSceneStage1.ImageType;
-import com.eaglesakura.lib.android.game.graphics.ImageBase;
-
-import android.os.Bundle;
-import android.app.Activity;
-import android.content.Intent;
-import android.database.DataSetObserver;
-import android.util.Log;
-import android.view.Menu;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 
 public class ConfigurationEnemyActivity extends Activity {
 	Intent baseIntent;
@@ -29,7 +22,7 @@ public class ConfigurationEnemyActivity extends Activity {
 	AttackType attackType = AttackType.Not;
 	ImageType imageType = ImageType.Frisbee;
 
-	@Override
+    @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_configuration_enemy);
@@ -99,13 +92,18 @@ public class ConfigurationEnemyActivity extends Activity {
 					imageType = ImageType.TongariPink;
 				}else if (selectedItem .equals( "戦艦C")){
 					imageType = ImageType.TongariRed;
-				}
+				}else if (selectedItem .equals( "保存された画像")){
+                    imageType = ImageType.Custom;
+                    Drawable drawable = Drawable.createFromPath("/sdcard/Download/test.png");
+                    Log.d("","loaded picture"+drawable);
+
+                }
 			}
 			@Override
 			public void onNothingSelected(AdapterView<?> arg0) {
 			}
 		}
-				);
+		    	);
 	}
 	public void Done(View v){
 
@@ -114,8 +112,15 @@ public class ConfigurationEnemyActivity extends Activity {
 		intent.putExtra("MoveType", moveType.toString());
 		intent.putExtra("AttackType", attackType.toString());
 		intent.putExtra("ImageType", imageType.toString());
+
+        if(imageType == ImageType.Custom){
+            intent.putExtra("ImageTYpe", new FileDisplayable("/sdcard/Download/test.png"));
+        }else{
+            intent.putExtra("ImageType", new ImageResourceDisplayable(imageType));
+        }
+
 		intent.putExtra("x", baseIntent.getIntExtra("x",0));
-		intent.putExtra("y", baseIntent.getIntExtra("y", 0));
+		intent.putExtra("y", baseIntent.getIntExtra("y",0));
 		setResult(RESULT_OK,intent);
 		finish();
 
