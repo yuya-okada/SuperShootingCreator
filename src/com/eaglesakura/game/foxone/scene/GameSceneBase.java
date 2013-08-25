@@ -71,16 +71,8 @@ public abstract class GameSceneBase extends SceneBase {
 
         // キャッシュが見つからなかったら
         if (result == null) {
-
-            if(displayable.getType() == DisplayableType.File){
-
-            }else{
-                int resId = ((ResourceDisplayable)displayable).getResourceID();
-            // 新たに画像を読み込む
-              result = game.loadImageDrawable(resId);
-              // キャッシュへ登録する
-              imageCache.put(displayable.getUUId(), result);
-            }
+            result = displayable.getImageBase(game);
+            imageCache.put(displayable.getUUId(), result);
         }
 
         // リソースを返す

@@ -5,6 +5,9 @@ import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.eaglesakura.game.foxone.FoxOne;
+import com.eaglesakura.lib.android.game.graphics.ImageBase;
+
 import org.json.JSONObject;
 
 import java.util.UUID;
@@ -83,5 +86,9 @@ public class ResourceDisplayable implements Displayable {
 
     public int getResourceID(){
         return resId;
+    }
+
+    public ImageBase getImageBase(FoxOne game) {
+        return game.loadImageDrawable(getResourceID());
     }
 }

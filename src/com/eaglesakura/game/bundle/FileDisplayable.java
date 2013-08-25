@@ -4,8 +4,12 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 
+import com.eaglesakura.game.foxone.FoxOne;
+import com.eaglesakura.lib.android.game.graphics.ImageBase;
+
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.UUID;
 
 public class FileDisplayable implements Displayable {
@@ -69,11 +73,23 @@ public class FileDisplayable implements Displayable {
 
     public UUID getUUId(){
         return UUID.randomUUID();
-
     }
 
     public DisplayableType getType(){
         return DisplayableType.File;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public ImageBase getImageBase(FoxOne game) {
+        try {
+            return game.loadImageAssets(getPath());
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
 }
