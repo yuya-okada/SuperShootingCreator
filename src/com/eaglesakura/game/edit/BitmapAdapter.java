@@ -21,6 +21,7 @@ public class BitmapAdapter extends ArrayAdapter<Bitmap> {
     public BitmapAdapter(Context context, int resource, List<Bitmap> objects) {
         super(context, resource, objects);
         resourceId = resource;
+
     }
 
     @Override
@@ -36,5 +37,4 @@ public class BitmapAdapter extends ArrayAdapter<Bitmap> {
 
         return view;
     }
-
 }

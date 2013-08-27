@@ -28,7 +28,6 @@ import com.eaglesakura.game.foxone.fighter.enemy.EnemyFighterBase.MoveType;
 import org.json.JSONArray;
 
 import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.util.ArrayList;
 
 public class MainActivity extends Activity implements View.OnClickListener{
@@ -193,6 +192,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
 		}else{
 			but.setBackground(getResources().getDrawable(R.drawable.border));
 		}
+
 		but.setTag(R.id.x,x);
 		but.setTag(R.id.y,y);
 		but.setMinimumWidth((int) (dp_w/5));
@@ -231,8 +231,12 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
 
 		Intent intent = new Intent(this,ConfigurationEnemyActivity.class);
-		intent.putExtra("x", x);
-		intent.putExtra("y", y);
+        SharedPreferences sharedPreferences = getSharedPreferences("Point",Context.MODE_PRIVATE);
+        Editor edit = sharedPreferences.edit();
+        edit.putInt("x",x);
+        edit.putInt("y",y);
+        edit.commit();
+
 		startActivityForResult(intent, 1);
 	}
 
@@ -243,8 +247,9 @@ public class MainActivity extends Activity implements View.OnClickListener{
 				MoveType moveType = MoveType.valueOf((String) data.getExtras().get("MoveType"));
 				AttackType attackType = AttackType.valueOf((String) data.getExtras().get("AttackType"));
 				//ImageType imageType = ImageType.valueOf((String)data.getExtras().get("ImageType"));
-				int x = data.getIntExtra("x", 0);
-				int y = data.getIntExtra("y", 0);
+                SharedPreferences sharedPreferences = getSharedPreferences("Point",MODE_PRIVATE);
+				int x = sharedPreferences.getInt("x", 0);
+				int y = sharedPreferences.getInt("y", 0);
                 Log.d("","resourceDisplayable1"+data.getExtras().getParcelable("ImageType"));
 
                 Displayable resourceDisplayable = data.getExtras().getParcelable("ImageType");

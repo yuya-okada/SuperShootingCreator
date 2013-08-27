@@ -2,7 +2,6 @@ package com.eaglesakura.game.edit;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -21,14 +20,16 @@ public class ConfigurationEnemyActivity extends Activity {
 	MoveType moveType = MoveType.Not;
 	AttackType attackType = AttackType.Not;
 	ImageType imageType = ImageType.Frisbee;
+    String picturePath;
 
     @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_configuration_enemy);
 
-		baseIntent = getIntent();
-		
+
+        baseIntent = getIntent();
+
 		Spinner spinnerMove = (Spinner)findViewById(R.id.spinner1);
 		Spinner spinnerAttack = (Spinner)findViewById(R.id.spinner2);
 		Spinner spinnerImage = (Spinner)findViewById(R.id.spinner3);
@@ -94,10 +95,10 @@ public class ConfigurationEnemyActivity extends Activity {
 					imageType = ImageType.TongariRed;
 				}else if (selectedItem .equals( "保存された画像")){
                     imageType = ImageType.Custom;
-                    Drawable drawable = Drawable.createFromPath("/sdcard/Download/test.png");
+//                    Drawable drawable = Drawable.createFromPath("/sdcard/Download/test.png");
                     IntentToGrid();
 
-                    Log.d("","loaded picture"+drawable);
+          //          Log.d("","loaded picture"+drawable);
 
                 }
 			}
@@ -116,7 +117,7 @@ public class ConfigurationEnemyActivity extends Activity {
 		intent.putExtra("ImageType", imageType.toString());
 
         if(imageType == ImageType.Custom){
-            intent.putExtra("ImageType", new FileDisplayable("/sdcard/Download/test.png"));
+            intent.putExtra("ImageType", new FileDisplayable(picturePath));
         }else{
             intent.putExtra("ImageType", new ImageResourceDisplayable(imageType));
         }
@@ -129,7 +130,16 @@ public class ConfigurationEnemyActivity extends Activity {
 	}
     public void IntentToGrid(){
         Intent intent = new Intent(this,GridActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent,2);
     }
 
+    @Override
+    public void onActivityResult(int requestcode,int resultcode ,Intent data){
+
+        if(resultcode == RESULT_OK){
+            System.out.println(data.hasExtra("picturePath"));
+            picturePath = data.getStringExtra("picturePath");
+            //System.out.println("picturePath: " + picturePath);
+        }
+    }
 }
