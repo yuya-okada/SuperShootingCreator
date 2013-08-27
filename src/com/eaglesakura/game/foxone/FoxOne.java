@@ -41,6 +41,7 @@ public class FoxOne extends SpriteGameLoopManagerBase {
     @Override
     protected void onGameFrameEnd() {
         sceneManager.onFrameEnd();
+
     }
 
     @Override

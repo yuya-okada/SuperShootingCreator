@@ -31,6 +31,10 @@
             android:label="@string/title_activity_configuration_enemy" >
         </activity>
         <activity
+                android:name="com.eaglesakura.game.edit.GridActivity"
+                android:label="@string/title_activity_configuration_enemy" >
+        </activity>
+        <activity
             android:name="com.eaglesakura.game.edit.TitleActivitty"
             android:label="@string/title_activity_title_activitty" >
             

@@ -85,7 +85,8 @@ public class FileDisplayable implements Displayable {
 
     public ImageBase getImageBase(FoxOne game) {
         try {
-            return game.loadImageAssets(getPath());
+            ImageBase img = game.loadImageFromFile(getPath());
+            return img;
         } catch (IOException e) {
             e.printStackTrace();
             return null;

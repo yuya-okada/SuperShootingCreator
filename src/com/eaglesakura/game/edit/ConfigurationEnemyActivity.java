@@ -95,6 +95,8 @@ public class ConfigurationEnemyActivity extends Activity {
 				}else if (selectedItem .equals( "保存された画像")){
                     imageType = ImageType.Custom;
                     Drawable drawable = Drawable.createFromPath("/sdcard/Download/test.png");
+                    IntentToGrid();
+
                     Log.d("","loaded picture"+drawable);
 
                 }
@@ -114,7 +116,7 @@ public class ConfigurationEnemyActivity extends Activity {
 		intent.putExtra("ImageType", imageType.toString());
 
         if(imageType == ImageType.Custom){
-            intent.putExtra("ImageTYpe", new FileDisplayable("/sdcard/Download/test.png"));
+            intent.putExtra("ImageType", new FileDisplayable("/sdcard/Download/test.png"));
         }else{
             intent.putExtra("ImageType", new ImageResourceDisplayable(imageType));
         }
@@ -124,6 +126,10 @@ public class ConfigurationEnemyActivity extends Activity {
 		setResult(RESULT_OK,intent);
 		finish();
 
-	} 
+	}
+    public void IntentToGrid(){
+        Intent intent = new Intent(this,GridActivity.class);
+        startActivity(intent);
+    }
 
 }

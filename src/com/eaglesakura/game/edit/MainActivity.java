@@ -28,6 +28,7 @@ import com.eaglesakura.game.foxone.fighter.enemy.EnemyFighterBase.MoveType;
 import org.json.JSONArray;
 
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 public class MainActivity extends Activity implements View.OnClickListener{
@@ -244,13 +245,16 @@ public class MainActivity extends Activity implements View.OnClickListener{
 				//ImageType imageType = ImageType.valueOf((String)data.getExtras().get("ImageType"));
 				int x = data.getIntExtra("x", 0);
 				int y = data.getIntExtra("y", 0);
+                Log.d("","resourceDisplayable1"+data.getExtras().getParcelable("ImageType"));
 
                 Displayable resourceDisplayable = data.getExtras().getParcelable("ImageType");
 
                 button.get(100-y).get(x).setImageDrawable(resourceDisplayable.getDrawable(this));
                 EnemyFighterBase enemyFighterBase = new EnemyFighterBase(resourceDisplayable,moveType,attackType,x, y);
 				enemyBaseArray.add(enemyFighterBase);
-			}
+
+
+            }
 		}			
 	}
 

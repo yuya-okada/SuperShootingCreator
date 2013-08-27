@@ -50,7 +50,7 @@ public class BombsInfo {
         // ボムの数だけ描画する
         for (int i = 0; i < bombCount; ++i) {
             // 通常よりも大きく描画する
-            bombImage.setSpritePosition(BOMB_CENTER, y, 2.0f, Sprite.POSITION_CENTER);
+            bombImage.setSpritePosition(BOMB_CENTER, y, 1.0f, 2.0f, Sprite.POSITION_CENTER);
             spriteManager.draw(bombImage);
 
             // 表示座標を少し下へ下げる

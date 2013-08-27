@@ -11,7 +11,6 @@ import com.eaglesakura.game.foxone.fighter.enemy.EnemyFighterBase;
 import com.eaglesakura.game.foxone.scene.GameSceneBase;
 import com.eaglesakura.game.foxone.scene.PlaySceneBase;
 import com.eaglesakura.lib.android.game.math.Vector2;
-import com.eaglesakura.lib.android.game.util.GameUtil;
 
 import java.util.List;
 
@@ -46,7 +45,8 @@ public class Bomb extends BulletBase {
         moveVector.y = (IMPACT_POS.y - getPositionY()) / EXPLOSION_FRAME;
 
         // 弾をその方向へ向ける
-        float rotate = GameUtil.getAngleDegree2D(position, IMPACT_POS);
+       // float rotate = GameUtil.getAngleDegree2D(position, IMPACT_POS);
+        float rotate = 1.0f;
         sprite.setRotateDegree(rotate);
     }
 

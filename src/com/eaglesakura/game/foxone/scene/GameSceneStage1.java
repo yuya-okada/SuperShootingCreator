@@ -166,7 +166,6 @@ public class GameSceneStage1 extends PlaySceneBase {
 				MoveType moveType = MoveType.valueOf(enemy.getString("moveType"));
 
                 JSONObject o = enemy.getJSONObject("imageType");
-                Log.d("foobar", o.toString());
                 Displayable displayable = DisplayableFactory.createFromJSON(enemy.getJSONObject("imageType"));
 
                     //ファイル名で指定されていた場合

@@ -20,7 +20,7 @@ public class BombExplosion extends Explosion {
 
         // 爆発エフェクトを大きくする
         final float nextScale = sprite.getScale() * 1.25f;
-        sprite.setSpritePosition((int) getPositionX(), (int) getPositionY(), nextScale, Sprite.POSITION_CENTER);
+        sprite.setSpritePosition((int) getPositionX(), (int) getPositionY(),1.0f, nextScale, Sprite.POSITION_CENTER);
     }
 
     @Override
