@@ -44,6 +44,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+                android:name="com.eaglesakura.game.edit.StageChoose"
+                android:label="@string/title_activity_title_activitty" >
+        </activity>
+
     </application>
 
 </manifest>

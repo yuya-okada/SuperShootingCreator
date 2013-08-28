@@ -1,14 +1,12 @@
 package com.eaglesakura.game.edit;
 
-import com.eaglesakura.game.foxone.R;
-import com.eaglesakura.game.foxone.R.layout;
-import com.eaglesakura.game.foxone.R.menu;
-
-import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.Menu;
 import android.view.MotionEvent;
+
+import com.eaglesakura.game.foxone.R;
 
 public class TitleActivitty extends Activity {
 
@@ -28,7 +26,7 @@ public class TitleActivitty extends Activity {
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 
-		Intent intent = new Intent(this,MainActivity.class);
+		Intent intent = new Intent(this,StageChoose.class);
 		startActivity(intent);
 		
 		return false;

@@ -8,11 +8,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.graphics.Point;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -33,6 +34,7 @@ import java.util.ArrayList;
 public class MainActivity extends Activity implements View.OnClickListener{
 	ArrayList<EnemyFighterBase> enemyBaseArray = new ArrayList<EnemyFighterBase>();
 	ScrollView scrollView;
+
 	SharedPreferences pref;
 	Editor editor;
 	Intent intent;
@@ -41,7 +43,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
 	/**
 	 * ステージ名
 	 */
-	String stageName="stage1";
+	String stageName=null;
 
 	int a;
 	int playerWidth;
@@ -59,6 +61,16 @@ public class MainActivity extends Activity implements View.OnClickListener{
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main2);
+
+        Intent intent = getIntent();
+        if(intent.getBooleanExtra("fromStageChooseActivity",false)){
+            stageName = intent.getStringExtra("stageName");
+        }
+        Display display = getWindowManager().getDefaultDisplay();
+        Point p = new Point();
+        display.getSize(p);
+        dp_w = p.x;
+        dp_h = p.y;
 
 		scrollView= (ScrollView)findViewById(R.id.scrollView1);
 		intentEnemy = getIntent();
@@ -113,7 +125,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
 	 * @return
 	 */
 	public Integer getIntentValue(String name){
-		if(!(intent.getSerializableExtra(name)==null)){
+		if((intent != null )&&(intent.getSerializableExtra(name)!=null)){
 
 			return (Integer) intent.getSerializableExtra(name);
 		}
@@ -169,16 +181,14 @@ public class MainActivity extends Activity implements View.OnClickListener{
 	 * @return
 	 */
 	public int dispSize(boolean type){
-
-		WindowManager wm=(WindowManager)getSystemService(WINDOW_SERVICE);
-		Display disp = wm.getDefaultDisplay();
-
-
+        Display display = getWindowManager().getDefaultDisplay();
+        Point p = new Point();
+        display.getSize(p);
 
 		if(type){
-			return disp.getWidth() ;
+			return p.x ;
 		}
-		return disp.getHeight() ;
+		return p.y ;
 	}
 
 	@SuppressWarnings("deprecation")
@@ -252,12 +262,13 @@ public class MainActivity extends Activity implements View.OnClickListener{
 				int y = sharedPreferences.getInt("y", 0);
                 Log.d("","resourceDisplayable1"+data.getExtras().getParcelable("ImageType"));
 
-                Displayable resourceDisplayable = data.getExtras().getParcelable("ImageType");
+                Displayable displayable = data.getExtras().getParcelable("ImageType");
 
-                button.get(100-y).get(x).setImageDrawable(resourceDisplayable.getDrawable(this));
-                EnemyFighterBase enemyFighterBase = new EnemyFighterBase(resourceDisplayable,moveType,attackType,x, y);
+                Drawable drawable =  displayable.getDrawable(this);
+
+                button.get(100-y).get(x).setImageDrawable(drawable);
+                EnemyFighterBase enemyFighterBase = new EnemyFighterBase(displayable,moveType,attackType,x, y);
 				enemyBaseArray.add(enemyFighterBase);
-
 
             }
 		}			
