@@ -22,7 +22,6 @@ public class DisplayableFactory {
             return new ImageResourceDisplayable(value);
         }
 
-
     }
 
 }

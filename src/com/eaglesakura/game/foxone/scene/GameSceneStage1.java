@@ -117,7 +117,6 @@ public class GameSceneStage1 extends PlaySceneBase {
 			this.attackType = attackType;
 			this.createX = createX;
 			this.createY = createY;
-			Log.d("","とんかち");
 		}
 
 		/**
@@ -249,61 +248,11 @@ public class GameSceneStage1 extends PlaySceneBase {
 	protected void addEnemy(Displayable image, MoveType moveType,AttackType attackType, int x, int y) {
 		EnemyFighterBase enemy = null;
 		enemy = new EnemyFighterBase(image,moveType,attackType,x,y, this);
-		//
-		//            case FrisbeeNotAttack:
-		//                enemy = new Frisbee(AttackType.Not, this);
-		//                break;
-		//            case FrisbeeStraightAttack:
-		//                enemy = new Frisbee(AttackType.ShotStraight, this);
-		//                break;
-		//            case FrisbeeSnipeAttack:
-		//               enemy = new Frisbee(AttackType.Snipe, this);
-		//                break;
-		//
-		//            case TongariAllDirection:
-		//                enemy = new Tongari(Tongari.AttackType.AllDirection, this);
-		//                break;
-		//            case TongariLaser:
-		//                enemy = new Tongari(Tongari.AttackType.Laser, this);
-		//                break;
-		//            case TongariLaserAndDirection:
-		//                enemy = new Tongari(Tongari.AttackType.LaserAndDirection, this);
-		//                break;
-		//            case BossMotherShip:
-		//                enemy = new MotherShip(this);
-		//                break;
 
 		enemy.setPosition(x, y);
 
-		// 移動タイプと敵の種類で呼び出しメソッドを変更する
 		{
-            /*
-			switch (moveType) {
-			case Straight:
-				if (imageType.toString().startsWith("Tongari")) {
-					// "Tongari"系列なら移動速度を3にする
-					enemy.initMoveStraight(3.0f);
-				} else if (imageType.toString().startsWith("Frisbee")) {
-					// "Frisbee"系列
-					enemy.initMoveStraight(5.0f);
-				}
-				break;
 
-			case Curved:
-				if (imageType.toString().startsWith("Tongari")) {
-					// "Tongari"系列
-					enemy.initMoveCurve(45.0f, 3.0f, 0.05f);
-				} else if (imageType.toString().startsWith("Frisbee")) {
-					// "Frisbee"系列なら移動速度を5にする
-					enemy.initMoveCurve(70.0f, 3.0f, 0.2f);
-				}
-				break;
-
-			default:
-				break;
-			}
-
-			*/
 		}
 		enemies.add(enemy);
 	}
