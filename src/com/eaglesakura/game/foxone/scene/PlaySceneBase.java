@@ -255,7 +255,7 @@ public abstract class PlaySceneBase extends GameSceneBase {
         final int PLAY_AREA_WIDTH = Define.PLAY_AREA_RIGHT - Define.PLAY_AREA_LEFT;
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(App.getContext());
-        String filePath = sharedPreferences.getString(App.DATA_FILE_NAME, null);
+        String filePath = sharedPreferences.getString(App.DATA_FILE_KEY, null);
         JSONObject json = JSONUtil.loadFromFile(App.getContext(), filePath);
 
         try {

@@ -17,10 +17,13 @@ import java.util.ArrayList;
 public class Stage {
     private ArrayList<EnemyFighterBase> enemyFighterBases = new ArrayList<EnemyFighterBase>();
     private Context context;
+    private String stageName;
 
-    public Stage(ArrayList<EnemyFighterBase> enemyFighterBase) {
+    public Stage(String stageName,ArrayList<EnemyFighterBase> enemyFighterBase) {
         this.enemyFighterBases = enemyFighterBase;
         context = App.getContext();
+
+        this.stageName = stageName;
     }
 
     public JSONObject toJSON() {
@@ -35,6 +38,7 @@ public class Stage {
         }
 
         try {
+            stageData.put("name",stageName);
             stageData.put("enemies", enemyJSON);
         } catch (Exception e) {
         }
@@ -44,8 +48,10 @@ public class Stage {
 
     public static Stage fromJSON(JSONObject jsonObject) {
         ArrayList<EnemyFighterBase> enemyFighterBases = new ArrayList<EnemyFighterBase>();
-        ;
+
+        String stageName = null;
         try {
+            stageName = jsonObject.getString("name");
             JSONArray jsonArray = jsonObject.getJSONArray("enemies");
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject enemy = jsonArray.getJSONObject(i);
@@ -62,7 +68,7 @@ public class Stage {
         } catch (Exception e) {
         }
 
-        Stage stage = new Stage(enemyFighterBases);
+        Stage stage = new Stage(stageName,enemyFighterBases);
         return stage;
     }
 

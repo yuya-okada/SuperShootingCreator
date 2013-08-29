@@ -298,43 +298,45 @@ public class MainActivity extends Activity implements View.OnClickListener {
         listDlg.create().show();
         return AttackType.Not;
     }
+    @Override
+    public void onPause(){
+        super.onPause();
+        //今編集しているステージ名を一時的に記録する。
+        //めんどくさいから闇のコードになることを覚悟の上でSharedPrefarenceをつかう。
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+        Editor editor = sharedPreferences.edit();
+        editor.putString("nowStage", stageName);
+        editor.commit();
+
+        //enemyJSONに敵情法を格納
+        JSONArray enemyJSON = new JSONArray();
+        for (EnemyFighterBase enemy : enemyBaseArray) {
+            enemyJSON.put(enemy.toJson());
+        }
+        Stage stage = new Stage(stageName,enemyBaseArray);
+        JSONObject jsonStage = stage.toJSON();
+
+        JSONObject data = JSONUtil.loadFromFile(MainActivity.this,sharedPreferences.getString(App.DATA_FILE_KEY, null));
+        JSONArray stages;
+        try{
+            stages = data.getJSONArray("stages");
+        }catch (Exception e){
+            stages = new JSONArray();
+        }
+        try {
+            stages.put(jsonStage);
+            data.put("stages",stages);
+        } catch (Exception e) {
+
+        }
+
+        JSONUtil.saveToFile(MainActivity.this, data, sharedPreferences.getString(App.DATA_FILE_KEY, null));
+    }
 
 
     private class OnEndButton implements View.OnClickListener {
-
         @Override
         public void onClick(View v) {
-
-            //今編集しているステージ名を一時的に記録する。
-            //めんどくさいから闇のコードになることを覚悟の上でSharedPrefarenceをつかう。
-            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
-            Editor editor = sharedPreferences.edit();
-            editor.putString("nowStage", stageName);
-            editor.commit();
-
-            //enemyJSONに敵情法を格納
-            JSONArray enemyJSON = new JSONArray();
-            for (EnemyFighterBase enemy : enemyBaseArray) {
-                enemyJSON.put(enemy.toJson());
-            }
-            Stage stage = new Stage(enemyBaseArray);
-            JSONObject jsonStage = stage.toJSON();
-
-            JSONObject data = JSONUtil.loadFromFile(MainActivity.this,App.DATA_FILE_NAME);
-            JSONObject stages;
-            try{
-                stages = data.getJSONObject("stages");
-            }catch (Exception e){
-                stages = new JSONObject();
-            }
-            try {
-                stages.put(stageName, jsonStage);
-                data.put("stages",stages);
-            } catch (Exception e) {
-
-            }
-
-            JSONUtil.saveToFile(MainActivity.this, data, sharedPreferences.getString(App.DATA_FILE_NAME, null));
             IntentTestPlay();
         }
     }

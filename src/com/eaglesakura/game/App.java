@@ -11,7 +11,7 @@ import android.preference.PreferenceManager;
 public class App extends Application {
 
     private static Context context;
-    public  static final String DATA_FILE_NAME = "stageData";
+    public  static final String DATA_FILE_KEY = "stageData";
 
     public void onCreate(){
 
