@@ -2,11 +2,8 @@ package com.eaglesakura.game.edit;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -42,12 +39,6 @@ public class StageChoose extends Activity {
                                 String stageName = stageNameEdit.getText().toString();
                                 intent.putExtra("stageName",stageName);
                                 intent.putExtra("fromStageChooseActivity",true);
-
-                                SharedPreferences sharedPreferences = getSharedPreferences("stageList", Context.MODE_PRIVATE);
-                                Editor editor = sharedPreferences.edit();
-                                editor.putString("");
-
-                                editor.putInt("stageNumber",sharedPreferences.getInt("stageNumber",0)+1);
 
                                 startActivity(intent);
 

@@ -95,11 +95,7 @@ public class ConfigurationEnemyActivity extends Activity {
 					imageType = ImageType.TongariRed;
 				}else if (selectedItem .equals( "保存された画像")){
                     imageType = ImageType.Custom;
-//                    Drawable drawable = Drawable.createFromPath("/sdcard/Download/test.png");
                     IntentToGrid();
-
-          //          Log.d("","loaded picture"+drawable);
-
                 }
 			}
 			@Override
