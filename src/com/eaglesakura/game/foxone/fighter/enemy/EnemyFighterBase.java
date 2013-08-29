@@ -20,6 +20,8 @@ import org.json.JSONObject;
 
 //public abstract class EnemyFighterBase extends FighterBase {
 public class EnemyFighterBase extends FighterBase {
+    float createX;
+    float createY;
 
 	/**
 	 * 攻撃手段
@@ -149,7 +151,16 @@ public class EnemyFighterBase extends FighterBase {
 		if(scene != null){
 			sprite = loadSprite(image);
 		}
-	}
+
+
+        final int PLAY_AREA_WIDTH = Define.PLAY_AREA_RIGHT - Define.PLAY_AREA_LEFT;
+
+        createX = PLAY_AREA_WIDTH / 5f * x;
+        createX += PLAY_AREA_WIDTH / 5f / 2f;
+        createX += Define.PLAY_AREA_LEFT;
+        createY = Define.VIRTUAL_DISPLAY_HEIGHT-PLAY_AREA_WIDTH / 5 * y;
+
+    }
 
 	/**
 	 * 直線移動をするように初期化する
@@ -402,6 +413,24 @@ public class EnemyFighterBase extends FighterBase {
 	public int getY(){
 	    return y;
 	}
-	
+
+    public AttackType getAttackType(){
+        return attackType;
+    }
+    public MoveType getMoveType(){
+        return moveType;
+    }
+    public Displayable getDisplayable(){
+        return image;
+    }
+
+    public float getCreateX() {
+        return createX;
+    }
+
+
+    public float getCreateY() {
+        return createY;
+    }
 
 }

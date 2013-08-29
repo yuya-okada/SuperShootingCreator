@@ -1,11 +1,11 @@
 package com.eaglesakura.game.foxone.scene;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
+import android.preference.PreferenceManager;
 
 import com.eaglesakura.game.bundle.Displayable;
-import com.eaglesakura.game.bundle.DisplayableFactory;
 import com.eaglesakura.game.foxone.Define;
 import com.eaglesakura.game.foxone.FoxOne;
 import com.eaglesakura.game.foxone.R;
@@ -22,12 +22,6 @@ import com.eaglesakura.lib.android.game.graphics.Color;
 import com.eaglesakura.lib.android.game.scene.SceneBase;
 import com.eaglesakura.lib.android.game.scene.SceneManager;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -64,6 +58,10 @@ public class GameSceneStage1 extends PlaySceneBase {
 		super(game);
 
         this.context = context;
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        stageName = sharedPreferences.getString("nowStage",null);
+
 	}
 
 	/**
@@ -142,50 +140,25 @@ public class GameSceneStage1 extends PlaySceneBase {
 	 */
 	@Override
 	protected void initializeEnemy() { // 出現させるY座標
-		final float CREATE_Y = -150;
-		// プレイエリアの左右から幅を取得する
-		final int PLAY_AREA_WIDTH = Define.PLAY_AREA_RIGHT - Define.PLAY_AREA_LEFT;
-		try {
-			InputStream is = game.getContext().openFileInput("stage1.json");
-			BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-			String line = null;
 
 			int createFrame = 0;
 
-			String fileContents = "";
-			// テキストファイルから全行読み込む
-			while ((line = reader.readLine()) != null) {
-				fileContents += line;
-			}
-			Log.d("","fileContents"+fileContents);
-			JSONArray enemies = new JSONArray(fileContents);
-			for(int i=0;i<enemies.length();i++){
-				JSONObject enemy = enemies.getJSONObject(i);
-				AttackType attackType = AttackType.valueOf(enemy.getString("attackType")); 
-				MoveType moveType = MoveType.valueOf(enemy.getString("moveType"));
+			ArrayList<EnemyFighterBase> enemies = stage.getEnemies();
+			for(int i=0;i<enemies.size();i++){
+		        EnemyFighterBase enemy = enemies.get(i);
 
-                JSONObject o = enemy.getJSONObject("imageType");
-                Displayable displayable = DisplayableFactory.createFromJSON(enemy.getJSONObject("imageType"));
+                int x = (int)enemy.getCreateX();
+                int y = (int)enemy.getCreateY();
 
-                    //ファイル名で指定されていた場合
-                    //ImageTypeで指定されていた場合
+                AttackType attackType = enemy.getAttackType();
+                MoveType moveType = enemy.getMoveType();
+                Displayable displayable = enemy.getDisplayable();
 
-
-				float createX = PLAY_AREA_WIDTH / 5f * enemy.getInt("x");
-				createX += PLAY_AREA_WIDTH / 5f / 2f;
-				createX += Define.PLAY_AREA_LEFT;
-				float createY = Define.VIRTUAL_DISPLAY_HEIGHT-PLAY_AREA_WIDTH / 5 * enemy.getInt("y");
-
-
-				stageEnemyDataList.add(new StageEnemyData(createFrame, displayable, moveType,attackType, createX, createY));
+                stageEnemyDataList.add(new StageEnemyData(createFrame, displayable, moveType,attackType, x, y));
 
 			}
 			// 1ラインにつき30フレーム後に生成する
 			createFrame += 30;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new RuntimeException("file load error!!");
-		}	
 	}
 
 	@Override

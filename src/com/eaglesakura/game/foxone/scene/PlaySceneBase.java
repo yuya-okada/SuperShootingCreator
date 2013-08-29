@@ -1,9 +1,10 @@
 package com.eaglesakura.game.foxone.scene;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
+import com.eaglesakura.game.App;
+import com.eaglesakura.game.edit.Stage;
 import com.eaglesakura.game.foxone.Define;
 import com.eaglesakura.game.foxone.FoxOne;
 import com.eaglesakura.game.foxone.bullet.BulletBase;
@@ -12,13 +13,22 @@ import com.eaglesakura.game.foxone.fighter.PlayerFighter;
 import com.eaglesakura.game.foxone.fighter.enemy.EnemyFighterBase;
 import com.eaglesakura.game.foxone.input.AttackButton;
 import com.eaglesakura.game.foxone.input.JoyStick;
+import com.eaglesakura.game.util.JSONUtil;
 import com.eaglesakura.lib.android.game.graphics.Color;
 import com.eaglesakura.lib.android.game.scene.SceneBase;
 import com.eaglesakura.lib.android.game.scene.SceneManager;
 
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 public abstract class PlaySceneBase extends GameSceneBase {
 
     PlayerFighter player = null;
+    String stageName;
+    Stage stage;
 
     protected abstract void initializeEnemy();
 
@@ -82,6 +92,7 @@ public abstract class PlaySceneBase extends GameSceneBase {
         shotButton = new AttackButton(this); // 攻撃ボタンを生成する
         player = new PlayerFighter(this, joyStick, shotButton); // プレイヤーを生成する
         // 敵を全て生成させる
+        initStage(stageName);
         initializeEnemy();
     }
 
@@ -236,5 +247,24 @@ public abstract class PlaySceneBase extends GameSceneBase {
      */
     public void clearBullets() {
         bullets.clear();
+    }
+
+    public void initStage(String stageName){
+        final float CREATE_Y = -150;
+        // プレイエリアの左右から幅を取得する
+        final int PLAY_AREA_WIDTH = Define.PLAY_AREA_RIGHT - Define.PLAY_AREA_LEFT;
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(App.getContext());
+        String filePath = sharedPreferences.getString(App.DATA_FILE_NAME, null);
+        JSONObject json = JSONUtil.loadFromFile(App.getContext(), filePath);
+
+        try {
+            JSONObject stages = json.getJSONObject("stages");
+            JSONObject jsonStage = stages.getJSONObject(stageName);
+
+            stage = Stage.fromJSON(jsonStage);
+        }catch (Exception e){
+
+        }
     }
 }
