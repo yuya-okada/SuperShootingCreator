@@ -75,4 +75,33 @@ public class Stage {
     public ArrayList<EnemyFighterBase> getEnemies() {
         return enemyFighterBases;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Stage stage = (Stage) o;
+
+        if (!stageName.equals(stage.stageName)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return stageName.hashCode();
+    }
+
+    public String getStageName() {
+        return stageName;
+    }
+
+    public void setStageName(String stageName) {
+        this.stageName = stageName;
+    }
+
+    public void setEnemyFighterBases(ArrayList<EnemyFighterBase> enemyFighterBases) {
+        this.enemyFighterBases = enemyFighterBases;
+    }
 }
