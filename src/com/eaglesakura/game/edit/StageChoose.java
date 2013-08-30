@@ -8,7 +8,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -27,7 +26,7 @@ public class StageChoose extends Activity {
     AlertDialog stageNameDialog = null;
     EditText stageNameEdit;
     Intent intent;
-    ArrayAdapter<String> adapter;
+    StageChooseAdapter adapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -35,7 +34,7 @@ public class StageChoose extends Activity {
         setContentView(R.layout.activity_stage_choose);
 
         ListView listView = (ListView) findViewById(R.id.listView);
-        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
+        adapter = new StageChooseAdapter(this, android.R.layout.simple_list_item_1);
         // アダプターを設定します
         listView.setAdapter(adapter);
 
@@ -58,6 +57,7 @@ public class StageChoose extends Activity {
                                 String stageName = stageNameEdit.getText().toString();
 
                                 if (!(stageName.equals("") || stageName.equals(null))) {
+
                                     intent.putExtra("stageName", stageName);
                                     intent.putExtra("fromStageChooseActivity", true);
                                     dialog.dismiss();
@@ -87,8 +87,12 @@ public class StageChoose extends Activity {
             for(int i = 0;i < stages.length();i++){
                 adapter.add(stages.getJSONObject(i).getString("name"));
             }
+
         } catch (Exception e) {
         }
+
+
+
 
     }
    @Override

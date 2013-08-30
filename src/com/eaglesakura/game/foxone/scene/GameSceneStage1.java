@@ -1,11 +1,11 @@
 package com.eaglesakura.game.foxone.scene;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
-import android.preference.PreferenceManager;
 
 import com.eaglesakura.game.bundle.Displayable;
+import com.eaglesakura.game.edit.Stage;
+import com.eaglesakura.game.edit.StageContainer;
 import com.eaglesakura.game.foxone.Define;
 import com.eaglesakura.game.foxone.FoxOne;
 import com.eaglesakura.game.foxone.R;
@@ -54,13 +54,19 @@ public class GameSceneStage1 extends PlaySceneBase {
 	 */
 	boolean gameClear = false;
 
-	public GameSceneStage1(FoxOne game,Context context) {
+    public GameSceneStage1(FoxOne game,Context context) {
+
+        this(game,context,StageContainer.getInstance().getCurrentStageEdit());
+    }
+
+    public GameSceneStage1(FoxOne game,Context context,Stage stage) {
 		super(game);
 
         this.context = context;
 
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        stageName = sharedPreferences.getString("nowStage",null);
+//        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+//        stageNumber = sharedPreferences.getInt("nowStage",0);
+        this.stage = stage;
 
 	}
 
@@ -139,7 +145,7 @@ public class GameSceneStage1 extends PlaySceneBase {
 	 * 配置情報を最初に登録する
 	 */
 	@Override
-	protected void initializeEnemy() { // 出現させるY座標
+	protected void initializeEnemy() {
 
 			int createFrame = 0;
 

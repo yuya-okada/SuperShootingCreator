@@ -11,7 +11,6 @@ import android.content.SharedPreferences.Editor;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
@@ -20,17 +19,12 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
-import com.eaglesakura.game.App;
 import com.eaglesakura.game.bundle.Displayable;
 import com.eaglesakura.game.foxone.InvaderGameActivity;
 import com.eaglesakura.game.foxone.R;
 import com.eaglesakura.game.foxone.fighter.enemy.EnemyFighterBase;
 import com.eaglesakura.game.foxone.fighter.enemy.EnemyFighterBase.AttackType;
 import com.eaglesakura.game.foxone.fighter.enemy.EnemyFighterBase.MoveType;
-import com.eaglesakura.game.util.JSONUtil;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -48,6 +42,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
      */
     String stageName = null;
 
+    int stageNumber = -1;
     int a;
     int playerWidth;
     int playerHeight;
@@ -65,9 +60,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 
+
         Intent intent = getIntent();
         if (intent.getBooleanExtra("fromStageChooseActivity", false)) {
             stageName = intent.getStringExtra("stageName");
+            stageNumber = intent.getIntExtra("stageNumber", -1);
         }
         Display display = getWindowManager().getDefaultDisplay();
         Point p = new Point();
@@ -301,43 +298,51 @@ public class MainActivity extends Activity implements View.OnClickListener {
     @Override
     public void onPause(){
         super.onPause();
-        //今編集しているステージ名を一時的に記録する。
-        //めんどくさいから闇のコードになることを覚悟の上でSharedPrefarenceをつかう。
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
-        Editor editor = sharedPreferences.edit();
-        editor.putString("nowStage", stageName);
-        editor.commit();
 
-        //enemyJSONに敵情法を格納
-        JSONArray enemyJSON = new JSONArray();
-        for (EnemyFighterBase enemy : enemyBaseArray) {
-            enemyJSON.put(enemy.toJson());
-        }
-        Stage stage = new Stage(stageName,enemyBaseArray);
-        JSONObject jsonStage = stage.toJSON();
+//        //enemyJSONに敵情法を格納
+//        JSONArray enemyJSON = new JSONArray();
+//        for (EnemyFighterBase enemy : enemyBaseArray) {
+//            enemyJSON.put(enemy.toJson());
+//        }
 
-        JSONObject data = JSONUtil.loadFromFile(MainActivity.this,sharedPreferences.getString(App.DATA_FILE_KEY, null));
-        JSONArray stages;
-        try{
-            stages = data.getJSONArray("stages");
-        }catch (Exception e){
-            stages = new JSONArray();
-        }
-        try {
-            stages.put(jsonStage);
-            data.put("stages",stages);
-        } catch (Exception e) {
-
-        }
-
-        JSONUtil.saveToFile(MainActivity.this, data, sharedPreferences.getString(App.DATA_FILE_KEY, null));
+//
+//        try{
+//            stages = data.getJSONArray("stages");
+//        }catch (Exception e){
+//            stages = new JSONArray();
+//        }
+//        try {
+//            stages.put(jsonStage);
+//            data.put("stages",stages);
+//        } catch (Exception e) {
+//
+//        }
+//
+//        JSONUtil.saveToFile(MainActivity.this, data, sharedPreferences.getString(App.DATA_FILE_KEY, null));
     }
 
 
     private class OnEndButton implements View.OnClickListener {
         @Override
         public void onClick(View v) {
+            saveStage();
             IntentTestPlay();
         }
+    }
+
+    public void saveStage(){
+        Stage stage;
+        if(stageNumber == -1){
+            stage = new Stage(stageName,enemyBaseArray);
+            StageContainer.getInstance().addStage(stage);
+        }else{
+            stage = StageContainer.getInstance().getStage(stageNumber);
+            stage.setEnemyFighterBases(enemyBaseArray);
+        }
+        //JSONObject jsonStage = stage.toJSON();
+
+
+        StageContainer.getInstance().saveStages();
+        StageContainer.getInstance().setCurrentStageEdit(stage);
     }
 }

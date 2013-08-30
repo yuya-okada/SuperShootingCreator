@@ -1,6 +1,9 @@
 package com.eaglesakura.game.foxone.scene;
 
+import com.eaglesakura.game.App;
 import com.eaglesakura.game.bundle.ResourceDisplayable;
+import com.eaglesakura.game.edit.Stage;
+import com.eaglesakura.game.edit.StageContainer;
 import com.eaglesakura.game.foxone.Define;
 import com.eaglesakura.game.foxone.FoxOne;
 import com.eaglesakura.game.foxone.R;
@@ -24,8 +27,8 @@ public class GameClearScene extends GameSceneBase {
     Sprite eventImage = null;
 
     /**
-    * 前のシーンを保持
-    */
+     * 前のシーンを保持
+     */
     SceneBase before = null;
 
     /**
@@ -101,9 +104,17 @@ public class GameClearScene extends GameSceneBase {
         // 画面をタップしたらシーンを切り替える
         if (alpha == 255) {
             if (input.isTouchOnce()) {
-                // タイトル画面へ戻す
-                TitleScene nextScene = new TitleScene(game);
-                manager.setNextScene(nextScene);
+
+                StageContainer stageContainer = StageContainer.getInstance();
+                Stage stage = stageContainer.getNextStage();
+                if (stage != null) {
+                    GameSceneStage1 sceneStage1 = new GameSceneStage1(game, App.getContext(), stageContainer.getNextStage());
+                    manager.setNextScene(sceneStage1);
+                } else {
+                    // タイトル画面へ戻す
+                    TitleScene nextScene = new TitleScene(game);
+                    manager.setNextScene(nextScene);
+                }
             }
         }
     }
