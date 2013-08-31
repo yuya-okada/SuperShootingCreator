@@ -29,12 +29,13 @@ import com.eaglesakura.game.foxone.fighter.enemy.EnemyFighterBase.MoveType;
 import java.util.ArrayList;
 
 public class MainActivity extends Activity implements View.OnClickListener {
-    ArrayList<EnemyFighterBase> enemyBaseArray = new ArrayList<EnemyFighterBase>();
+    ArrayList<EnemyFighterBase> enemyBaseArray;
     ScrollView scrollView;
 
     SharedPreferences pref;
     Editor editor;
     Intent intent;
+    private Stage stage;
 
     Button buttonint;
     /**
@@ -43,7 +44,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
     String stageName = null;
 
     int stageNumber = -1;
-    int a;
     int playerWidth;
     int playerHeight;
     int playerbulletWidtht;
@@ -60,12 +60,19 @@ public class MainActivity extends Activity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 
-
         Intent intent = getIntent();
-        if (intent.getBooleanExtra("fromStageChooseActivity", false)) {
-            stageName = intent.getStringExtra("stageName");
-            stageNumber = intent.getIntExtra("stageNumber", -1);
+
+        stageName = intent.getStringExtra("stageName");
+        int stageNumber = intent.getIntExtra("stageNumber", -1);
+
+        if(stageNumber != -1) {
+            stage = StageContainer.getInstance().getStage(stageNumber);
+            enemyBaseArray = stage.getEnemies();
+        } else {
+            enemyBaseArray = new ArrayList<EnemyFighterBase>();
+            stage = new Stage(stageName, enemyBaseArray);
         }
+
         Display display = getWindowManager().getDefaultDisplay();
         Point p = new Point();
         display.getSize(p);
@@ -91,11 +98,16 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 buttonRow.get(i).setOnClickListener(this);
             }
         }
+
+        for(EnemyFighterBase enemy: enemyBaseArray) {
+            Drawable drawable = enemy.getDisplayable().getDrawable(this);
+            button.get(100 - enemy.getY()).get(enemy.getX()).setImageDrawable(drawable);
+        }
+
         buttonint = new Button(this);
         buttonint.setText("テストプレイ");
         buttonint.setOnClickListener(new OnEndButton());
         linearLayout.addView(buttonint);
-        intent = getIntent();
 
         scrollView.post(new Runnable() {
             @Override
@@ -104,18 +116,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
             }
         });
-
-        pref = getSharedPreferences("pref", Activity.MODE_PRIVATE);
-
-        // Editor の設定
-        editor = pref.edit();
-        // Editor に値を代入
-        if (intent != null) {
-            editor.putInt("a", getIntentValue("playerWidth"));
-        }
-        // データの保存
-        editor.commit();
-        //		Toast.makeText(this, String.valueOf(pref.getInt("a", 0)), Toast.LENGTH_LONG).show();
     }
 
 
@@ -331,14 +331,13 @@ public class MainActivity extends Activity implements View.OnClickListener {
     }
 
     public void saveStage(){
-        Stage stage;
-        if(stageNumber == -1){
-            stage = new Stage(stageName,enemyBaseArray);
-            StageContainer.getInstance().addStage(stage);
-        }else{
-            stage = StageContainer.getInstance().getStage(stageNumber);
-            stage.setEnemyFighterBases(enemyBaseArray);
-        }
+//        if(stageNumber == -1){
+//            stage = new Stage(stageName,enemyBaseArray);
+//            StageContainer.getInstance().addStage(stage);
+//        }else{
+//            stage = StageContainer.getInstance().getStage(stageNumber);
+//            stage.setEnemyFighterBases(enemyBaseArray);
+//        }
         //JSONObject jsonStage = stage.toJSON();
 
 
