@@ -248,7 +248,7 @@ public abstract class PlaySceneBase extends GameSceneBase {
     public void initStage(int stageNumber) {
         if (stage == null) {
             StageContainer stageContainer = StageContainer.getInstance();
-            stage = stageContainer.getStage(stageNumber);
+
         }
 //        final float CREATE_Y = -150;
         // プレイエリアの左右から幅を取得する

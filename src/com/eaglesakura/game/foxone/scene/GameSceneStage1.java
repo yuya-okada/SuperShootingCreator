@@ -258,7 +258,7 @@ public class GameSceneStage1 extends PlaySceneBase {
 		super.onFrameBegin(manager);
 
 		// ボムボタンを更新する
-		bombButton.update();
+		//bombButton.update();
 
 		// 敵の侵略状態を更新する
 		updateEnemyInvasion();
@@ -315,10 +315,10 @@ public class GameSceneStage1 extends PlaySceneBase {
 		}
 
 		hpBar.draw(); // HPバーを描画する
-		bomsInfo.draw(); // ボム情報を描画する
+		//bomsInfo.draw(); // ボム情報を描画する
 
-		shotButton.draw(); // 攻撃ボタンを描画する
-		bombButton.draw(); // ボムボタンを描画する
+		//shotButton.draw(); // 攻撃ボタンを描画する
+		//bombButton.draw(); // ボムボタンを描画する
 	}
 
 	/**

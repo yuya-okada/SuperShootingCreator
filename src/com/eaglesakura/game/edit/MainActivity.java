@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
@@ -19,6 +20,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
+import com.eaglesakura.game.App;
 import com.eaglesakura.game.bundle.Displayable;
 import com.eaglesakura.game.foxone.InvaderGameActivity;
 import com.eaglesakura.game.foxone.R;
@@ -60,12 +62,22 @@ public class MainActivity extends Activity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 
+        if (App.mp.isPlaying()){
+            //一時停止
+            App.mp.pause();
+        }
+        App.mp = MediaPlayer.create(this, R.raw.bgm_main);
+        App.mp .setLooping(true);
+        App.mp.start();
+
         Intent intent = getIntent();
 
-        stageName = intent.getStringExtra("stageName");
-        int stageNumber = intent.getIntExtra("stageNumber", -1);
+        if (intent.getBooleanExtra("fromStageChooseActivity", false)) {
+            stageName = intent.getStringExtra("stageName");
+            stageNumber = intent.getIntExtra("stageNumber", -1);
+        }
 
-        if(stageNumber != -1) {
+        if (stageNumber != -1) {
             stage = StageContainer.getInstance().getStage(stageNumber);
             enemyBaseArray = stage.getEnemies();
         } else {
@@ -99,13 +111,14 @@ public class MainActivity extends Activity implements View.OnClickListener {
             }
         }
 
-        for(EnemyFighterBase enemy: enemyBaseArray) {
+        for (EnemyFighterBase enemy : enemyBaseArray) {
             Drawable drawable = enemy.getDisplayable().getDrawable(this);
             button.get(100 - enemy.getY()).get(enemy.getX()).setImageDrawable(drawable);
         }
 
         buttonint = new Button(this);
         buttonint.setText("テストプレイ");
+        buttonint.setBackgroundDrawable(getResources().getDrawable(R.drawable.btn_18));
         buttonint.setOnClickListener(new OnEndButton());
         linearLayout.addView(buttonint);
 
@@ -295,8 +308,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
         listDlg.create().show();
         return AttackType.Not;
     }
+
     @Override
-    public void onPause(){
+    public void onPause() {
         super.onPause();
 
 //        //enemyJSONに敵情法を格納
@@ -330,18 +344,24 @@ public class MainActivity extends Activity implements View.OnClickListener {
         }
     }
 
-    public void saveStage(){
-//        if(stageNumber == -1){
-//            stage = new Stage(stageName,enemyBaseArray);
-//            StageContainer.getInstance().addStage(stage);
-//        }else{
-//            stage = StageContainer.getInstance().getStage(stageNumber);
-//            stage.setEnemyFighterBases(enemyBaseArray);
-//        }
-        //JSONObject jsonStage = stage.toJSON();
-
+    public void saveStage() {
+        if(stageNumber == -1){
+            stage = new Stage(stageName,enemyBaseArray);
+            StageContainer.getInstance().addStage(stage);
+        }else{
+            stage = StageContainer.getInstance().getStage(stageNumber);
+            stage.setEnemyFighterBases(enemyBaseArray);
+        }
 
         StageContainer.getInstance().saveStages();
         StageContainer.getInstance().setCurrentStageEdit(stage);
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+
+        Log.d("","らら");
+        saveStage();
     }
 }

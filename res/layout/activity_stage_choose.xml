@@ -3,15 +3,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
-
-    <Button
-            android:layout_width="382dp"
-            android:layout_height="wrap_content"
-            android:text="ステージを編集"
-            android:id="@+id/button"
-            android:layout_gravity="left|center_vertical"
-            android:onClick="editStage"/>
+              android:layout_height="match_parent"
+              android:background="@drawable/bg_top">
 
     <Button
             android:layout_width="fill_parent"
@@ -19,11 +12,13 @@
             android:text="新しいステージ"
             android:id="@+id/button2"
             android:onClick="newStage"
+            android:background="@drawable/btn_18"
             />
 
     <ListView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/listView"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            android:alpha="1.0"/>
 </LinearLayout>
