@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_supershootingcreator" default="compile.module.supershootingcreator">
+  <dirname property="module.supershootingcreator.basedir" file="${ant.file.module_supershootingcreator}"/>
+  
+  <property name="module.jdk.home.supershootingcreator" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.supershootingcreator" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.supershootingcreator" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.supershootingcreator" value="${compiler.args}"/>
+  
+  <property name="supershootingcreator.output.dir" value="${module.supershootingcreator.basedir}/out/production/SuperShootingCreator"/>
+  <property name="supershootingcreator.testoutput.dir" value="${module.supershootingcreator.basedir}/out/test/SuperShootingCreator"/>
+  
+  <path id="supershootingcreator.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="supershootingcreator.module.production.classpath">
+    <path refid="${module.jdk.classpath.supershootingcreator}"/>
+    <path refid="library.libs.classpath"/>
+  </path>
+  
+  <path id="supershootingcreator.runtime.production.module.classpath">
+    <pathelement location="${supershootingcreator.output.dir}"/>
+    <path refid="library.libs.classpath"/>
+  </path>
+  
+  <path id="supershootingcreator.module.classpath">
+    <path refid="${module.jdk.classpath.supershootingcreator}"/>
+    <pathelement location="${supershootingcreator.output.dir}"/>
+    <path refid="library.libs.classpath"/>
+  </path>
+  
+  <path id="supershootingcreator.runtime.module.classpath">
+    <pathelement location="${supershootingcreator.testoutput.dir}"/>
+    <pathelement location="${supershootingcreator.output.dir}"/>
+    <path refid="library.libs.classpath"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.supershootingcreator">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.supershootingcreator">
+    <patternset refid="compiler.excluded"/>
+    <patternset refid="excluded.from.module.supershootingcreator"/>
+  </patternset>
+  
+  <path id="supershootingcreator.module.sourcepath">
+    <dirset dir="${module.supershootingcreator.basedir}">
+      <include name="src"/>
+      <include name="gen"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.supershootingcreator" depends="compile.module.supershootingcreator.production,compile.module.supershootingcreator.tests" description="Compile module SuperShootingCreator"/>
+  
+  <target name="compile.module.supershootingcreator.production" depends="register.custom.compilers" description="Compile module SuperShootingCreator; production classes">
+    <mkdir dir="${supershootingcreator.output.dir}"/>
+    <javac2 destdir="${supershootingcreator.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.supershootingcreator}/javac">
+      <compilerarg line="${compiler.args.supershootingcreator}"/>
+      <bootclasspath refid="supershootingcreator.module.bootclasspath"/>
+      <classpath refid="supershootingcreator.module.production.classpath"/>
+      <src refid="supershootingcreator.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.supershootingcreator"/>
+    </javac2>
+    
+    <copy todir="${supershootingcreator.output.dir}">
+      <fileset dir="${module.supershootingcreator.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+        <patternset refid="excluded.from.compilation.supershootingcreator"/>
+      </fileset>
+      <fileset dir="${module.supershootingcreator.basedir}/gen">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+        <patternset refid="excluded.from.compilation.supershootingcreator"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.supershootingcreator.tests" depends="register.custom.compilers,compile.module.supershootingcreator.production" description="compile module SuperShootingCreator; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.supershootingcreator" description="cleanup module">
+    <delete dir="${supershootingcreator.output.dir}"/>
+    <delete dir="${supershootingcreator.testoutput.dir}"/>
+  </target>
+</project>

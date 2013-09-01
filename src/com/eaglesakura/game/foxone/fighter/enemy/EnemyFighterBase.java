@@ -104,7 +104,7 @@ public class EnemyFighterBase extends FighterBase {
 	/**
 	 * sinの増加速度
 	 */
-	float sinSpeed = 0;
+	float sinSpeed = 4f;
 
 	/**
 	 * 現在のsinθの値
@@ -114,7 +114,7 @@ public class EnemyFighterBase extends FighterBase {
 	/**
 	 * Cuve移動でのXの移動速度
 	 */
-	float moveSpeedX = 0;
+	float moveSpeedX = 5f;
 	
 	/**
 	 * 敵のX座標
@@ -180,6 +180,7 @@ public class EnemyFighterBase extends FighterBase {
 	public void initMoveCurve(float moveSpeedX, float moveSpeedY, float sinSpeed) {
 		moveType = MoveType.Curved;
 
+        Log.d("","りりりりりり");
 		this.moveSpeedX = moveSpeedX;
 		this.moveSpeed = moveSpeedY;
 		this.sinSpeed = sinSpeed;
@@ -219,20 +220,25 @@ public class EnemyFighterBase extends FighterBase {
 	 */
 	void onUpdateCurved() {
 
-		// 移動先のY座標は単純な加算でよい
+        sinSpeed = 1;
+
+        // 移動先のY座標は単純な加算でよい
 		float nextY = getPositionY() + moveSpeed;
 
-		// 移動先のX座標はsinから計算を行う
+
+        // 移動先のX座標はsinから計算を行う
 		float nextX = 0;
 		{
-			float xMove = (float) Math.sin(theta) * moveSpeedX;
+			float xMove = (float) Math.sin(theta) * 70f;
 			nextX = centerX + xMove;
 			// sinの値をすすめる
 			theta += sinSpeed;
+
 		}
 
-		// 求められた移動先座標を設定する
-		setPosition(nextX, nextY);
+        Log.d("","りnextX:"+nextX);
+        // 求められた移動先座標を設定する
+		setPosition(getPositionX()+nextX, nextY);
 	}
 
 	@Override
