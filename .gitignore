@@ -2,3 +2,4 @@ out/
 gen/
 .idea
 bin/
+.DS_STORE

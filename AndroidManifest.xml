@@ -35,6 +35,14 @@
                 android:label="@string/title_activity_configuration_enemy" >
         </activity>
         <activity
+                android:name="com.eaglesakura.game.edit.ConfigurationBossActivity"
+                android:label="@string/title_activity_configuration_enemy" >
+        </activity>
+        <activity
+                android:name="com.eaglesakura.game.edit.EnemyConfigTab"
+                android:label="EnemyConfigTab" >
+        </activity>
+        <activity
             android:name="com.eaglesakura.game.edit.TitleActivitty"
             android:label="@string/title_activity_title_activitty" >
             

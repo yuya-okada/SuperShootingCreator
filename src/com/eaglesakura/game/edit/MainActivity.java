@@ -24,14 +24,16 @@ import com.eaglesakura.game.App;
 import com.eaglesakura.game.bundle.Displayable;
 import com.eaglesakura.game.foxone.InvaderGameActivity;
 import com.eaglesakura.game.foxone.R;
+import com.eaglesakura.game.foxone.fighter.FighterBase;
+import com.eaglesakura.game.foxone.fighter.enemy.BossFighterBase;
 import com.eaglesakura.game.foxone.fighter.enemy.EnemyFighterBase;
-import com.eaglesakura.game.foxone.fighter.enemy.EnemyFighterBase.AttackType;
-import com.eaglesakura.game.foxone.fighter.enemy.EnemyFighterBase.MoveType;
+import com.eaglesakura.game.foxone.fighter.FighterBase.AttackType;
+import com.eaglesakura.game.foxone.fighter.FighterBase.MoveType;
 
 import java.util.ArrayList;
 
 public class MainActivity extends Activity implements View.OnClickListener {
-    ArrayList<EnemyFighterBase> enemyBaseArray;
+    ArrayList<FighterBase> enemyBaseArray;
     ScrollView scrollView;
 
     SharedPreferences pref;
@@ -62,12 +64,12 @@ public class MainActivity extends Activity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 
-        if (App.mp.isPlaying()){
+        if (App.mp.isPlaying()) {
             //一時停止
             App.mp.pause();
         }
         App.mp = MediaPlayer.create(this, R.raw.bgm_main);
-        App.mp .setLooping(true);
+        App.mp.setLooping(true);
         App.mp.start();
 
         Intent intent = getIntent();
@@ -81,7 +83,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
             stage = StageContainer.getInstance().getStage(stageNumber);
             enemyBaseArray = stage.getEnemies();
         } else {
-            enemyBaseArray = new ArrayList<EnemyFighterBase>();
+            enemyBaseArray = new ArrayList<FighterBase>();
             stage = new Stage(stageName, enemyBaseArray);
         }
 
@@ -111,7 +113,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
             }
         }
 
-        for (EnemyFighterBase enemy : enemyBaseArray) {
+        for (FighterBase enemy : enemyBaseArray) {
             Drawable drawable = enemy.getDisplayable().getDrawable(this);
             button.get(100 - enemy.getY()).get(enemy.getX()).setImageDrawable(drawable);
         }
@@ -247,10 +249,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 imageButton.setImageDrawable(null);
                 imageButton.setOnClickListener(context);
                 for (int i = 0; i < enemyBaseArray.size(); i++) {
-                    EnemyFighterBase enemyFighterBase = enemyBaseArray.get(i);
+                    FighterBase enemyFighterBase = enemyBaseArray.get(i);
                     if (enemyFighterBase.getX() == x && enemyFighterBase.getY() == y) {
                         enemyBaseArray.remove(i);
                         break;
+
                     }
 
                 }
@@ -258,7 +261,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         });
 
 
-        Intent intent = new Intent(this, ConfigurationEnemyActivity.class);
+        Intent intent = new Intent(this, EnemyConfigTab.class);
         SharedPreferences sharedPreferences = getSharedPreferences("Point", Context.MODE_PRIVATE);
         Editor edit = sharedPreferences.edit();
         edit.putInt("x", x);
@@ -272,8 +275,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     public void onActivityResult(int requestcode, int resultcode, Intent data) {
         if (requestcode == 1) {
             if (resultcode == RESULT_OK) {
-                MoveType moveType = MoveType.valueOf((String) data.getExtras().get("MoveType"));
-                AttackType attackType = AttackType.valueOf((String) data.getExtras().get("AttackType"));
+                String enemyType = String.valueOf(data.getExtras().get("EnemyType"));
                 //ImageType imageType = ImageType.valueOf((String)data.getExtras().get("ImageType"));
                 SharedPreferences sharedPreferences = getSharedPreferences("Point", MODE_PRIVATE);
                 int x = sharedPreferences.getInt("x", 0);
@@ -285,9 +287,16 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 Drawable drawable = displayable.getDrawable(this);
 
                 button.get(100 - y).get(x).setImageDrawable(drawable);
-                EnemyFighterBase enemyFighterBase = new EnemyFighterBase(displayable, moveType, attackType, x, y);
-                enemyBaseArray.add(enemyFighterBase);
-
+                if (enemyType == "Normal") {
+                    MoveType moveType = MoveType.valueOf((String) data.getExtras().get("MoveType"));
+                    AttackType attackType = AttackType.valueOf((String) data.getExtras().get("AttackType"));
+                    EnemyFighterBase enemyFighterBase = new EnemyFighterBase(displayable, moveType, attackType, x, y);
+                    enemyBaseArray.add(enemyFighterBase);
+                } else if (enemyType == "Boss") {
+                    ArrayList<BossFighterBase.ConductType> conductArray = new ArrayList<BossFighterBase.ConductType>();
+                     BossFighterBase bossFighterBase = new BossFighterBase(displayable, conductArray, x, y);
+                    enemyBaseArray.add(bossFighterBase);
+                }
             }
         }
     }
@@ -313,26 +322,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
     public void onPause() {
         super.onPause();
 
-//        //enemyJSONに敵情法を格納
-//        JSONArray enemyJSON = new JSONArray();
-//        for (EnemyFighterBase enemy : enemyBaseArray) {
-//            enemyJSON.put(enemy.toJson());
-//        }
-
-//
-//        try{
-//            stages = data.getJSONArray("stages");
-//        }catch (Exception e){
-//            stages = new JSONArray();
-//        }
-//        try {
-//            stages.put(jsonStage);
-//            data.put("stages",stages);
-//        } catch (Exception e) {
-//
-//        }
-//
-//        JSONUtil.saveToFile(MainActivity.this, data, sharedPreferences.getString(App.DATA_FILE_KEY, null));
     }
 
 
@@ -345,10 +334,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
     }
 
     public void saveStage() {
-        if(stageNumber == -1){
-            stage = new Stage(stageName,enemyBaseArray);
+        if (stageNumber == -1) {
+            stage = new Stage(stageName, enemyBaseArray);
             StageContainer.getInstance().addStage(stage);
-        }else{
+        } else {
             stage = StageContainer.getInstance().getStage(stageNumber);
             stage.setEnemyFighterBases(enemyBaseArray);
         }
@@ -358,10 +347,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
     }
 
     @Override
-    public void onStop(){
+    public void onStop() {
         super.onStop();
 
-        Log.d("","らら");
+        Log.d("", "らら");
         saveStage();
     }
 }
