@@ -329,21 +329,4 @@ public class BossFighterBase extends FighterBase {
         onUpdateAllDirection();
         onUpdateLaser();
     }
-
-
-    @Override
-    public void setScene(GameSceneBase scene) {
-        super.setScene(scene);
-        sprite = loadSprite(image);
-    }
-
-    public float getCreateX() {
-        return createX;
-    }
-
-
-    public float getCreateY() {
-        return createY;
-    }
-
 }

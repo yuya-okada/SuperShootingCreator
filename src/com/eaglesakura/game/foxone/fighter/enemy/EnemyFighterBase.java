@@ -17,9 +17,6 @@ import com.eaglesakura.game.foxone.scene.PlaySceneBase;
 
 //public abstract class EnemyFighterBase extends FighterBase {
 public class EnemyFighterBase extends FighterBase {
-    float createX;
-    float createY;
-
 	/**
 	 * 攻撃手段
 	 */
@@ -80,31 +77,6 @@ public class EnemyFighterBase extends FighterBase {
 	}
 	public EnemyFighterBase(int createFrame,Displayable image,MoveType moveType,AttackType attackType,int x,int y,GameSceneBase scene) {
 		super(createFrame,image,moveType,attackType,x,y,scene);
-
-		
-		this.x = x;
-		
-		this.y = y;
-		
-		// 攻撃手段を保持する
-		this.attackType = attackType;
-
-		this.moveType = moveType;
-
-		this.image = image;
-		// 攻撃手段によって、敵の見た目を変化させる
-		
-		if(scene != null){
-			sprite = loadSprite(image);
-		}
-
-
-        final int PLAY_AREA_WIDTH = Define.PLAY_AREA_RIGHT - Define.PLAY_AREA_LEFT;
-
-        createX = PLAY_AREA_WIDTH / 5f * x;
-        createX += PLAY_AREA_WIDTH / 5f / 2f;
-        createX += Define.PLAY_AREA_LEFT;
-        createY = Define.VIRTUAL_DISPLAY_HEIGHT-PLAY_AREA_WIDTH / 5 * y;
 
     }
 
