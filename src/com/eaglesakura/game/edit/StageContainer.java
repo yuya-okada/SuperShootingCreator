@@ -42,7 +42,8 @@ public class StageContainer {
         try {
             jsonStages = json.getJSONArray("stages");
             for (int i = 0; i < jsonStages.length(); i++) {
-                stages.add(Stage.fromJSON(jsonStages.getJSONObject(i)));
+                Stage stage = Stage.fromJSON(jsonStages.getJSONObject(i));
+                stages.add(stage);
             }
 
         } catch (Exception e) {

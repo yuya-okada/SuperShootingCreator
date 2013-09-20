@@ -19,9 +19,6 @@ import java.util.ArrayList;
 
 //public abstract class EnemyFighterBase extends FighterBase {
 public class BossFighterBase extends FighterBase {
-    float createX;
-    float createY;
-
     int conductNumber;
 
     public enum ConductType {
@@ -44,17 +41,10 @@ public class BossFighterBase extends FighterBase {
 
     ArrayList<Integer> conductFrame = new ArrayList<Integer>();
 
-    /**
-     * 生成されてからのフレームを記録する。
-     */
-    protected int frameCount = 0;
-
-    Displayable image = null;
-
 
     ConductType nowConduct;
 
-    /**
+        /**
      * 移動速度
      */
     float moveSpeed = 2;
@@ -79,27 +69,16 @@ public class BossFighterBase extends FighterBase {
      */
     float moveSpeedX = 5f;
 
-    /**
-     * 敵のX座標
-     */
-    int x;
-
-    /**
-     * 敵のY座標
-     */
-    int y;
+    public BossFighterBase(BossFighterBase toCopy) {
+        this(toCopy.getDisplayable(), toCopy.conductArray, toCopy.getX(), toCopy.getY(), toCopy.getScene());
+    }
 
 
     public BossFighterBase(Displayable image, ArrayList<ConductType> conductArray, int x, int y) {
-    this(image,conductArray,x,y,null);
+        this(image,conductArray,x,y,null);
     }
     public BossFighterBase(Displayable image, ArrayList<ConductType> conductArray, int x, int y, GameSceneBase scene) {
-        super(0, image, null, null, x, y, scene);
-
-
-        this.x = x;
-
-        this.y = y;
+        super(0, image, x, y, scene);
 
         // 攻撃手段を保持する
         this.conductArray = conductArray;
@@ -128,22 +107,6 @@ public class BossFighterBase extends FighterBase {
 
 
         }
-
-        this.image = image;
-        // 攻撃手段によって、敵の見た目を変化させる
-
-        if (scene != null) {
-            sprite = loadSprite(image);
-        }
-
-
-        final int PLAY_AREA_WIDTH = Define.PLAY_AREA_RIGHT - Define.PLAY_AREA_LEFT;
-
-        createX = PLAY_AREA_WIDTH / 5f * x;
-        createX += PLAY_AREA_WIDTH / 5f / 2f;
-        createX += Define.PLAY_AREA_LEFT;
-        createY = Define.VIRTUAL_DISPLAY_HEIGHT - PLAY_AREA_WIDTH / 5 * y;
-
     }
 
     /**
@@ -328,5 +291,14 @@ public class BossFighterBase extends FighterBase {
     void onUpdateLaserAndDirection() {
         onUpdateAllDirection();
         onUpdateLaser();
+    }
+
+    @Override
+    public BossFighterBase clone() {
+        BossFighterBase result = (BossFighterBase)super.clone();
+        result.conductArray = conductArray;
+        result.conductFrame = conductFrame;
+        result.conductNumber = conductNumber;
+        return result;
     }
 }
