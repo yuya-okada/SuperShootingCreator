@@ -122,6 +122,7 @@ public class StageChoose extends Activity {
 
     @Override
     public void onDestroy() {
+        super.onDestroy();
         App.mp.stop();
 
     }
