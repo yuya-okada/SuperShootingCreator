@@ -287,12 +287,12 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 Drawable drawable = displayable.getDrawable(this);
 
                 button.get(100 - y).get(x).setImageDrawable(drawable);
-                if (enemyType == "Normal") {
+                if (enemyType.equals("Normal")) {
                     MoveType moveType = MoveType.valueOf((String) data.getExtras().get("MoveType"));
                     AttackType attackType = AttackType.valueOf((String) data.getExtras().get("AttackType"));
                     EnemyFighterBase enemyFighterBase = new EnemyFighterBase(displayable, moveType, attackType, x, y);
                     enemyBaseArray.add(enemyFighterBase);
-                } else if (enemyType == "Boss") {
+                } else if (enemyType.equals("Boss")) {
                     ArrayList<BossFighterBase.ConductType> conductArray = new ArrayList<BossFighterBase.ConductType>();
                      BossFighterBase bossFighterBase = new BossFighterBase(displayable, conductArray, x, y);
                     enemyBaseArray.add(bossFighterBase);

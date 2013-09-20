@@ -7,14 +7,15 @@ import com.eaglesakura.game.foxone.Define;
 import com.eaglesakura.game.foxone.GameSprite;
 import com.eaglesakura.game.foxone.bullet.BulletBase;
 import com.eaglesakura.game.foxone.scene.GameSceneBase;
+import com.eaglesakura.lib.android.game.graphics.Sprite;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public abstract class FighterBase extends GameSprite {
 
-    float createX;
-    float createY;
+    protected float createX;
+    protected float createY;
 
     int lastCreateFrame;
     /**
@@ -136,6 +137,13 @@ public abstract class FighterBase extends GameSprite {
         return result;
     }
 
+    @Override
+    protected Sprite loadSprite(Displayable displayable) {
+        sprite = super.loadSprite(displayable);
+        setPosition(createX, createY);
+        return sprite;
+    }
+
     /**
      * ２つのスプライトが衝突している場合、trueを返す。
      * @param other
@@ -201,10 +209,10 @@ public abstract class FighterBase extends GameSprite {
     public Displayable getDisplayable(){
         return image;
     }
+
     public float getCreateX() {
         return createX;
     }
-
 
     public float getCreateY() {
         return createY;
@@ -219,4 +227,13 @@ public abstract class FighterBase extends GameSprite {
         return lastCreateFrame;
     }
 
+    public void setLastCreateFrame(int lastCreateFrame) {
+        this.lastCreateFrame = lastCreateFrame;
+    }
+
+    @Override
+    public void setScene(GameSceneBase scene) {
+        super.setScene(scene);
+        sprite = loadSprite(image);
+    }
 }

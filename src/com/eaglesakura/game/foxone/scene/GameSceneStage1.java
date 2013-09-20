@@ -82,14 +82,8 @@ public class GameSceneStage1 extends PlaySceneBase {
         ArrayList<FighterBase> enemies = stage.getEnemies();
         for (int i = 0; i < enemies.size(); i++) {
             FighterBase enemy = enemies.get(i);
-
-            int x = (int) enemy.getCreateX();
-            int y = (int) enemy.getCreateY();
-
-            AttackType attackType = enemy.getAttackType();
-            MoveType moveType = enemy.getMoveType();
-            Displayable displayable = enemy.getDisplayable();
-
+            fighterBaseList.add(enemy);
+            enemy.setLastCreateFrame(createFrame);
             // 1ラインにつき30フレーム後に生成する
             createFrame += 30;
         }
