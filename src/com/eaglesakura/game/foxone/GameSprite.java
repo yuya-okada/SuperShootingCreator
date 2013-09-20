@@ -179,8 +179,10 @@ public abstract class GameSprite {
     }
     
     public  void setScene(GameSceneBase scene){
-    	
-    	this.scene=scene;
-    	
+     	this.scene=scene;
+     }
+
+    public GameSceneBase getScene() {
+        return scene;
     }
 }

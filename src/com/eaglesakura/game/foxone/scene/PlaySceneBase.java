@@ -6,8 +6,8 @@ import com.eaglesakura.game.foxone.Define;
 import com.eaglesakura.game.foxone.FoxOne;
 import com.eaglesakura.game.foxone.bullet.BulletBase;
 import com.eaglesakura.game.foxone.effect.EffectBase;
+import com.eaglesakura.game.foxone.fighter.FighterBase;
 import com.eaglesakura.game.foxone.fighter.PlayerFighter;
-import com.eaglesakura.game.foxone.fighter.enemy.EnemyFighterBase;
 import com.eaglesakura.game.foxone.input.AttackButton;
 import com.eaglesakura.game.foxone.input.JoyStick;
 import com.eaglesakura.lib.android.game.graphics.Color;
@@ -28,7 +28,7 @@ public abstract class PlaySceneBase extends GameSceneBase {
 
     JoyStick joyStick = null;
     AttackButton shotButton = null;
-    protected List<EnemyFighterBase> enemies = new ArrayList<EnemyFighterBase>();
+    protected List<FighterBase> enemies = new ArrayList<FighterBase>();
     List<BulletBase> bullets = new ArrayList<BulletBase>();
     List<EffectBase> effects = new ArrayList<EffectBase>();
 
@@ -53,8 +53,8 @@ public abstract class PlaySceneBase extends GameSceneBase {
         effects.add(effect);
     }
 
-    public EnemyFighterBase intersectsEnemy(BulletBase bullet) {
-        for (EnemyFighterBase enemy : enemies) {
+    public FighterBase intersectsEnemy(BulletBase bullet) {
+        for (FighterBase enemy : enemies) {
             if (enemy.isIntersect(bullet)) {
                 enemy.onDamage(bullet);
                 return enemy;
@@ -69,10 +69,10 @@ public abstract class PlaySceneBase extends GameSceneBase {
      * @param bullet
      * @return
      */
-    public List<EnemyFighterBase> getIntersectEnemies(BulletBase bullet) {
-        List<EnemyFighterBase> result = new ArrayList<EnemyFighterBase>();
+    public List<FighterBase> getIntersectEnemies(BulletBase bullet) {
+        List<FighterBase> result = new ArrayList<FighterBase>();
 
-        for (EnemyFighterBase enemy : enemies) {
+        for (FighterBase enemy : enemies) {
             if (enemy.isIntersect(bullet)) {
                 // 衝突していたら衝突リストに追加する
                 result.add(enemy);
@@ -108,9 +108,9 @@ public abstract class PlaySceneBase extends GameSceneBase {
 
         // 敵を全て更新する
         {
-            Iterator<EnemyFighterBase> iterator = enemies.iterator();
+            Iterator<FighterBase> iterator = enemies.iterator();
             while (iterator.hasNext()) {
-                EnemyFighterBase enemy = iterator.next();
+                FighterBase enemy = iterator.next();
                 enemy.update();
 
                 // 敵が撃墜されるか、ディスプレイから見えなくなったら消去
@@ -158,7 +158,7 @@ public abstract class PlaySceneBase extends GameSceneBase {
             player.draw(); // プレイヤーを描画する
         }
         // 敵を全て描画する
-        for (EnemyFighterBase enemy : enemies) {
+        for (FighterBase enemy : enemies) {
             enemy.draw();
         }
 
@@ -203,7 +203,7 @@ public abstract class PlaySceneBase extends GameSceneBase {
      */
     public boolean isGameover() {
         // 全ての敵をチェックする
-        for (EnemyFighterBase enemy : enemies) {
+        for (FighterBase enemy : enemies) {
             // 敵のY座標がプレイヤーのY座標を超えていたら=プレイヤーよりも下にいる=前線を突破された
             if (enemy.getPositionY() > player.getPositionY()) {
                 // ゲームオーバー

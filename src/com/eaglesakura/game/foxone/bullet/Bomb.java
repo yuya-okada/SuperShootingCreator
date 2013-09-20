@@ -7,7 +7,6 @@ import com.eaglesakura.game.foxone.Define;
 import com.eaglesakura.game.foxone.R;
 import com.eaglesakura.game.foxone.effect.BombExplosion;
 import com.eaglesakura.game.foxone.fighter.FighterBase;
-import com.eaglesakura.game.foxone.fighter.enemy.EnemyFighterBase;
 import com.eaglesakura.game.foxone.scene.GameSceneBase;
 import com.eaglesakura.game.foxone.scene.PlaySceneBase;
 import com.eaglesakura.lib.android.game.math.Vector2;
@@ -81,8 +80,8 @@ public class Bomb extends BulletBase {
         // ボムのダメージ量
         final int BOMB_DAMAGE = 10;
 
-        List<EnemyFighterBase> intersectenemies = playSceneBase.getIntersectEnemies(this);
-        for (EnemyFighterBase enemy : intersectenemies) {
+        List<FighterBase> intersectenemies = playSceneBase.getIntersectEnemies(this);
+        for (FighterBase enemy : intersectenemies) {
 
             // 必要な回数だけダメージを与える
             for (int i = 0; i < BOMB_DAMAGE; ++i) {

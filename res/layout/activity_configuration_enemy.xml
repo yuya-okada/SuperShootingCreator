@@ -2,7 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ConfigurationEnemyActivity" >
+    tools:context=".ConfigurationEnemyActivity"
+    android:background="#000000">
 
     <Spinner
         android:id="@+id/spinner1"
@@ -60,13 +61,12 @@
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/done"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_marginBottom="30dp"
-        android:text="完了" 
-        android:onClick="Done"/>
+        android:text="完了" />
 
 </RelativeLayout>
