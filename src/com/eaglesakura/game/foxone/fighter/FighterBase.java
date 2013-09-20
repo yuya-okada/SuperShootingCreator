@@ -12,16 +12,17 @@ import com.eaglesakura.lib.android.game.graphics.Sprite;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public abstract class FighterBase extends GameSprite {
+public abstract class FighterBase extends GameSprite implements Cloneable {
 
     protected float createX;
     protected float createY;
 
-    int lastCreateFrame;
     /**
-     * 攻撃手段
+     * 生成されてからのフレームを記録する。
      */
-    AttackType attackType = AttackType.Not;
+    protected int frameCount = 0;
+
+    protected int lastCreateFrame;
 
 
     public enum AttackType {
@@ -54,7 +55,6 @@ public abstract class FighterBase extends GameSprite {
         Not,
 
     }
-    MoveType moveType = MoveType.Not;
 
     /**
      * 移動手段を列挙する
@@ -78,10 +78,10 @@ public abstract class FighterBase extends GameSprite {
         Not,
     }
 
-    Displayable image = null;
+    protected Displayable image = null;
 
-    int x;
-    int y;
+    protected int x;
+    protected int y;
 
     /**
      * 戦闘機のヒットポイント。
@@ -94,10 +94,10 @@ public abstract class FighterBase extends GameSprite {
     }
 
     public FighterBase(GameSceneBase scene, Displayable image) {
-        this(0, image, null, null, -1, -1, scene);
+        this(0, image, -1, -1, scene);
     }
 
-    public FighterBase(int createFrame,Displayable image,MoveType moveType,AttackType attackType,int x,int y,GameSceneBase scene) {
+    public FighterBase(int createFrame,Displayable image, int x,int y,GameSceneBase scene) {
         super(scene);
 
         lastCreateFrame = createFrame;
@@ -105,11 +105,6 @@ public abstract class FighterBase extends GameSprite {
         this.x = x;
 
         this.y = y;
-
-        // 攻撃手段を保持する
-        this.attackType = attackType;
-
-        this.moveType = moveType;
 
         this.image = image;
         // 攻撃手段によって、敵の見た目を変化させる
@@ -187,8 +182,6 @@ public abstract class FighterBase extends GameSprite {
         JSONObject enemy = new JSONObject();
 
         try {
-            enemy.put("attackType",attackType.toString());
-            enemy.put("moveType",moveType.toString());
             enemy.put("imageType",image.toJSON());
             enemy.put("x",x);
             enemy.put("y",y);
@@ -217,12 +210,7 @@ public abstract class FighterBase extends GameSprite {
     public float getCreateY() {
         return createY;
     }
-    public AttackType getAttackType(){
-        return attackType;
-    }
-    public MoveType getMoveType(){
-        return moveType;
-    }
+
     public int getLastCreateFrame(){
         return lastCreateFrame;
     }
@@ -236,4 +224,22 @@ public abstract class FighterBase extends GameSprite {
         super.setScene(scene);
         sprite = loadSprite(image);
     }
+
+    @Override
+    public FighterBase clone() {
+        try {
+            FighterBase result = (FighterBase)super.clone();
+            result.image = image;
+            result.lastCreateFrame = lastCreateFrame;
+            result.scene = scene;
+            result.x = x;
+            result.y = y;
+            result.createX = createX;
+            result.createY = createY;
+            return result;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
+    }
+
 }

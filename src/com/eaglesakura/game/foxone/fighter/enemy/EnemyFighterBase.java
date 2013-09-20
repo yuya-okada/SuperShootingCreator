@@ -15,22 +15,15 @@ import com.eaglesakura.game.foxone.fighter.FighterBase;
 import com.eaglesakura.game.foxone.scene.GameSceneBase;
 import com.eaglesakura.game.foxone.scene.PlaySceneBase;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 //public abstract class EnemyFighterBase extends FighterBase {
 public class EnemyFighterBase extends FighterBase {
 	/**
 	 * 攻撃手段
 	 */
 	AttackType attackType = AttackType.Not;
-
-
-	/**
-	 * 生成されてからのフレームを記録する。
-	 */
-	protected int frameCount = 0;
-
-	Displayable image = null;
-
-
 
 	MoveType moveType = MoveType.Not;
 
@@ -58,26 +51,18 @@ public class EnemyFighterBase extends FighterBase {
 	 * Cuve移動でのXの移動速度
 	 */
 	float moveSpeedX = 5f;
-	
-	/**
-	 * 敵のX座標
-	 */
-	int x;
-	
-	/**
-	 * 敵のY座標
-	 */
-	int y;
 
 	//public EnemyFighterBase(int x,int y) {
 		//this(ImageType.Frisbee ,MoveType.Straight,AttackType.Not,x,y,null);
 	//}
+
 	public EnemyFighterBase(Displayable image,MoveType moveType,AttackType attackType,int x,int y) {
 		this(0,image,moveType,attackType,x,y,null);
 	}
 	public EnemyFighterBase(int createFrame,Displayable image,MoveType moveType,AttackType attackType,int x,int y,GameSceneBase scene) {
-		super(createFrame,image,moveType,attackType,x,y,scene);
-
+		super(createFrame, image, x, y, scene);
+        this.moveType = moveType;
+        this.attackType = attackType;
     }
 
 	/**
@@ -304,15 +289,31 @@ public class EnemyFighterBase extends FighterBase {
 		onUpdateLaser();
 	}
 
-
-
 	@Override
 	public void setScene(GameSceneBase scene){
 		super.setScene(scene);
 		sprite = loadSprite(image);
 	}
-	
 
+    @Override
+    public JSONObject toJson() {
+        JSONObject jsonObject = super.toJson();
+        try {
+            jsonObject.put("attackType",attackType.toString());
+            jsonObject.put("moveType",moveType.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
+    }
 
+    @Override
+    public EnemyFighterBase clone() {
+        EnemyFighterBase result = (EnemyFighterBase)super.clone();
+        result.theta = theta;
+        result.attackType = attackType;
+        result.moveType = moveType;
+        return result;
+    }
 
 }

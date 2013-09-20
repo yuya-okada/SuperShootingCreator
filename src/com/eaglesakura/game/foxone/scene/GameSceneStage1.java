@@ -84,9 +84,9 @@ public class GameSceneStage1 extends PlaySceneBase {
             FighterBase enemy = enemies.get(i);
             fighterBaseList.add(enemy);
             enemy.setLastCreateFrame(createFrame);
-            // 1ラインにつき30フレーム後に生成する
-            createFrame += 30;
         }
+        // 1ラインにつき30フレーム後に生成す
+        createFrame += 30;
     }
 
         @Override
@@ -148,7 +148,8 @@ public class GameSceneStage1 extends PlaySceneBase {
         }
 
     protected void addEnemy(FighterBase fighterBase) {
-        enemies.add(fighterBase);
+        fighterBase.setScene(this);
+        enemies.add(fighterBase.clone());
     }
         /**
          * 敵の侵攻状態を更新する
@@ -160,7 +161,7 @@ public class GameSceneStage1 extends PlaySceneBase {
         while (iterator.hasNext()) {
             FighterBase enemy = iterator.next();
             // 生成に成功したら、リストから排除する
-            if (frameCount < enemy.getLastCreateFrame()) {
+            if (frameCount >= enemy.getLastCreateFrame()) {
                 addEnemy(enemy);
                 iterator.remove();
             }
