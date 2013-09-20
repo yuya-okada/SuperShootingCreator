@@ -5,4 +5,33 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
+
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="45dp">
+
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:text="Normal"
+                android:id="@+id/button"
+                android:layout_weight="1"
+                android:onClick="changeNormal"/>
+
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:text="Boss"
+                android:id="@+id/button2"
+                android:layout_weight="1"
+                android:onClick="changeBoss"/>
+    </LinearLayout>
+
+    <RelativeLayout
+            android:id="@+id/select_enemy_container"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            />
+
+
 </LinearLayout>

@@ -96,5 +96,8 @@ public class StageContainer {
         return null;
     }
 
+    public void removeItem(int position){
+        stages.remove(position);
+    }
 
 }

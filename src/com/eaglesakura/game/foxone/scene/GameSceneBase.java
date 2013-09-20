@@ -1,8 +1,6 @@
 package com.eaglesakura.game.foxone.scene;
 
 import com.eaglesakura.game.bundle.Displayable;
-import com.eaglesakura.game.bundle.DisplayableType;
-import com.eaglesakura.game.bundle.ResourceDisplayable;
 import com.eaglesakura.game.foxone.FoxOne;
 import com.eaglesakura.lib.android.game.graphics.ImageBase;
 import com.eaglesakura.lib.android.game.graphics.gl11.SpriteManager;

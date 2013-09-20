@@ -125,4 +125,7 @@ public class StageChoose extends Activity {
         App.mp.stop();
 
     }
+
+
+
 }
