@@ -9,11 +9,13 @@ import android.view.MotionEvent;
 import com.eaglesakura.game.foxone.R;
 
 public class TitleActivitty extends Activity {
+    private boolean startedStageChoose;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_title_activitty);
+        startedStageChoose = false;
 	}
 
 	@Override
@@ -25,11 +27,20 @@ public class TitleActivitty extends Activity {
 	
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
+        if(startedStageChoose) {
+            return false;
+        }
 
+        startedStageChoose = true;
 		Intent intent = new Intent(this,StageChoose.class);
-		startActivity(intent);
+		startActivityForResult(intent, 1);
 		
 		return false;
 	}
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        startedStageChoose = false;
+    }
 
 }

@@ -5,9 +5,10 @@ import android.content.Context;
 import com.eaglesakura.game.App;
 import com.eaglesakura.game.bundle.Displayable;
 import com.eaglesakura.game.bundle.DisplayableFactory;
+import com.eaglesakura.game.foxone.fighter.FighterBase;
+import com.eaglesakura.game.foxone.fighter.FighterBase.AttackType;
+import com.eaglesakura.game.foxone.fighter.FighterBase.MoveType;
 import com.eaglesakura.game.foxone.fighter.enemy.EnemyFighterBase;
-import com.eaglesakura.game.foxone.fighter.enemy.EnemyFighterBase.AttackType;
-import com.eaglesakura.game.foxone.fighter.enemy.EnemyFighterBase.MoveType;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -15,11 +16,11 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class Stage {
-    private ArrayList<EnemyFighterBase> enemyFighterBases = new ArrayList<EnemyFighterBase>();
+    private ArrayList<FighterBase> enemyFighterBases = new ArrayList<FighterBase>();
     private Context context;
     private String stageName;
 
-    public Stage(String stageName,ArrayList<EnemyFighterBase> enemyFighterBase) {
+    public Stage(String stageName,ArrayList<FighterBase> enemyFighterBase) {
         this.enemyFighterBases = enemyFighterBase;
         context = App.getContext();
 
@@ -33,7 +34,7 @@ public class Stage {
         JSONArray enemyJSON = new JSONArray();
 
 
-        for (EnemyFighterBase enemy : enemyFighterBases) {
+        for (FighterBase enemy : enemyFighterBases) {
             enemyJSON.put(enemy.toJson());
         }
 
@@ -47,7 +48,7 @@ public class Stage {
     }
 
     public static Stage fromJSON(JSONObject jsonObject) {
-        ArrayList<EnemyFighterBase> enemyFighterBases = new ArrayList<EnemyFighterBase>();
+        ArrayList<FighterBase> enemyFighterBases = new ArrayList<FighterBase>();
 
         String stageName = null;
         try {
@@ -72,7 +73,7 @@ public class Stage {
         return stage;
     }
 
-    public ArrayList<EnemyFighterBase> getEnemies() {
+    public ArrayList<FighterBase> getEnemies() {
         return enemyFighterBases;
     }
 
@@ -101,7 +102,7 @@ public class Stage {
         this.stageName = stageName;
     }
 
-    public void setEnemyFighterBases(ArrayList<EnemyFighterBase> enemyFighterBases) {
+    public void setEnemyFighterBases(ArrayList<FighterBase> enemyFighterBases) {
         this.enemyFighterBases = enemyFighterBases;
     }
 }

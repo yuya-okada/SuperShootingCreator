@@ -15,209 +15,138 @@ import com.eaglesakura.game.foxone.fighter.FighterBase;
 import com.eaglesakura.game.foxone.scene.GameSceneBase;
 import com.eaglesakura.game.foxone.scene.PlaySceneBase;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import java.util.ArrayList;
 
 //public abstract class EnemyFighterBase extends FighterBase {
 public class BossFighterBase extends FighterBase {
-    float createX;
-    float createY;
+    int conductNumber;
 
-	/**
-	 * 攻撃手段
-	 */
-	AttackType attackType = AttackType.Not;
-
-	public enum AttackType {
-		/**
-		 * まっすぐに弾を撃つ
-		 */
-		ShotStraight,
-
-		/**
-		 * プレイヤーを狙撃する
-		 */
-		Snipe,
-		/**
-		 * 全方位弾を撃つ
-		 */
-		AllDirection,
-
-		/**
-		 * レーザーを撃つ
-		 */
-		Laser,
-
-		/**
-		 * 複合攻撃
-		 */
-		LaserAndDirection,
-		/**
-		 * 何もしない
-		 */
-		Not,
-
-
-	}
-	/**
-	 * 生成されてからのフレームを記録する。
-	 */
-	protected int frameCount = 0;
-
-	Displayable image = null;
-
-	/**
-	 * 移動手段を列挙する
-	 * @author TAKESHI YAMASHITA
-	 *
-	 */
-	public enum MoveType {
-		/**
-		 * 直線的に動く
-		 */
-		Straight,
-
-		/**
-		 * 曲線的に動く
-		 */
-		Curved,
-
-		/**
-		 * 動かない
-		 */
-		Not,
-	}
-
-
-	MoveType moveType = MoveType.Not;
-
-	/**
-	 * 移動速度
-	 */
-	float moveSpeed = 2;
-
-	/**
-	 * 移動の基準点
-	 */
-	float centerX = 0;
-
-	/**
-	 * sinの増加速度
-	 */
-	float sinSpeed = 4f;
-
-	/**
-	 * 現在のsinθの値
-	 */
-	float theta = 0;
-
-	/**
-	 * Cuve移動でのXの移動速度
-	 */
-	float moveSpeedX = 5f;
-
-	/**
-	 * 敵のX座標
-	 */
-	int x;
-
-	/**
-	 * 敵のY座標
-	 */
-	int y;
-
-	//public EnemyFighterBase(int x,int y) {
-		//this(ImageType.Frisbee ,MoveType.Straight,AttackType.Not,x,y,null);
-	//}
-	public BossFighterBase(Displayable image, MoveType moveType, AttackType attackType, int x, int y) {
-		this(image,moveType,attackType,x,y,null);
-	}
-	public BossFighterBase(Displayable image, MoveType moveType, AttackType attackType, int x, int y, GameSceneBase scene) {
-		super(scene);
-
-		
-		this.x = x;
-		
-		this.y = y;
-		
-		// 攻撃手段を保持する
-		this.attackType = attackType;
-
-		this.moveType = moveType;
-
-		this.image = image;
-		// 攻撃手段によって、敵の見た目を変化させる
-		
-		if(scene != null){
-			sprite = loadSprite(image);
-		}
-
-
-        final int PLAY_AREA_WIDTH = Define.PLAY_AREA_RIGHT - Define.PLAY_AREA_LEFT;
-
-        createX = PLAY_AREA_WIDTH / 5f * x;
-        createX += PLAY_AREA_WIDTH / 5f / 2f;
-        createX += Define.PLAY_AREA_LEFT;
-        createY = Define.VIRTUAL_DISPLAY_HEIGHT-PLAY_AREA_WIDTH / 5 * y;
+    public enum ConductType {
+        Shot,
+        SnipeShot,
+        AllDirectionShot,
+        Laser,
+        MoveToUnder,
+        MoveToUp,
+        MoveToRight,
+        MoveToLeft,
+        Wait
 
     }
 
-	/**
-	 * 直線移動をするように初期化する
-	 * @param moveSpeed
-	 */
-	public void initMoveStraight(float moveSpeed) {
-		moveType = MoveType.Straight;
-		this.moveSpeed = moveSpeed;
-	}
+    /**
+     * 敵の行動パターン
+     */
+    ArrayList<ConductType> conductArray = new ArrayList<ConductType>();
 
-	/**
-	 * カーブ移動をするように初期化する
-	 * @param moveSpeedX Xの移動量。この値が大きいほど、左右に大きく動く
-	 * @param moveSpeedY Yの移動量。この値が大きいほど、上下の動きが速くなる
-	 * @param sinSpeed sinθの変動量。この値が大きいほど、左右のサイクルが短くなる
-	 */
-	public void initMoveCurve(float moveSpeedX, float moveSpeedY, float sinSpeed) {
-		moveType = MoveType.Curved;
+    ArrayList<Integer> conductFrame = new ArrayList<Integer>();
 
-        Log.d("","りりりりりり");
-		this.moveSpeedX = moveSpeedX;
-		this.moveSpeed = moveSpeedY;
-		this.sinSpeed = sinSpeed;
 
-		// 現在の中心位置を記録する
-		centerX = getPositionX();
-	}
+    ConductType nowConduct;
 
-	/**
-	 * フレーム数のカウンタを0に戻す。
-	 */
-	protected void resetFrameCount() {
-		frameCount = 0;
-	}
+        /**
+     * 移動速度
+     */
+    float moveSpeed = 2;
 
-	@Override
-	public void onDamage(BulletBase bullet) {
-		super.onDamage(bullet);
+    /**
+     * 移動の基準点
+     */
+    float centerX = 0;
 
-		// ダメージを受けた結果、撃墜されたら、撃墜音を鳴らす
-		if (isDead()) {
-			scene.playSE(R.raw.dead);
-		}
-	}
+    /**
+     * sinの増加速度
+     */
+    float sinSpeed = 4f;
 
-	/**
-	 * 直線移動を行う
-	 */
-	void onUpdateStraignt() {
-		Log.d("","into 'onUpdateStraight' method");
+    /**
+     * 現在のsinθの値
+     */
+    float theta = 0;
 
-		offsetPosition(0, moveSpeed);
-	}
+    /**
+     * Cuve移動でのXの移動速度
+     */
+    float moveSpeedX = 5f;
 
-	/**
-	 * 左右のジグザグ移動を行う
-	 */
+    public BossFighterBase(BossFighterBase toCopy) {
+        this(toCopy.getDisplayable(), toCopy.conductArray, toCopy.getX(), toCopy.getY(), toCopy.getScene());
+    }
+
+
+    public BossFighterBase(Displayable image, ArrayList<ConductType> conductArray, int x, int y) {
+        this(image,conductArray,x,y,null);
+    }
+    public BossFighterBase(Displayable image, ArrayList<ConductType> conductArray, int x, int y, GameSceneBase scene) {
+        super(0, image, x, y, scene);
+
+        // 攻撃手段を保持する
+        this.conductArray = conductArray;
+
+        for (int i = 0; i < conductArray.size(); i++) {
+
+            if (conductArray.get(i) == ConductType.Shot) {
+                conductFrame.add(30 * 3);
+            } else if (conductArray.get(i) == ConductType.SnipeShot) {
+                conductFrame.add(30 * 3);
+            } else if (conductArray.get(i) == ConductType.AllDirectionShot) {
+                conductFrame.add(360);
+            } else if (conductArray.get(i) == ConductType.Laser) {
+                conductFrame.add(300);
+            } else if (conductArray.get(i) == ConductType.MoveToUp) {
+                conductFrame.add(24);
+            } else if (conductArray.get(i) == ConductType.MoveToUnder) {
+                conductFrame.add(24);
+            } else if (conductArray.get(i) == ConductType.MoveToRight) {
+                conductFrame.add(24);
+            } else if (conductArray.get(i) == ConductType.MoveToLeft) {
+                conductFrame.add(24);
+            } else if (conductArray.get(i) == ConductType.Wait) {
+                conductFrame.add(24);
+            }
+
+
+        }
+    }
+
+    /**
+     * 直線移動をするように初期化する
+     *
+     * @param moveSpeed
+     */
+    public void initMoveStraight(float moveSpeed) {
+        this.moveSpeed = moveSpeed;
+    }
+
+    /**
+     * フレーム数のカウンタを0に戻す。
+     */
+    protected void resetFrameCount() {
+        frameCount = 0;
+    }
+
+    @Override
+    public void onDamage(BulletBase bullet) {
+        super.onDamage(bullet);
+
+        // ダメージを受けた結果、撃墜されたら、撃墜音を鳴らす
+        if (isDead()) {
+            scene.playSE(R.raw.dead);
+        }
+    }
+
+    /**
+     * 直線移動を行う
+     */
+    void onUpdateStraignt() {
+        Log.d("", "into 'onUpdateStraight' method");
+
+        offsetPosition(0, moveSpeed);
+    }
+
+    /**
+     * 左右のジグザグ移動を行う
+     */
     void onUpdateCurved() {
 
         sinSpeed = 0.1f;
@@ -234,207 +163,142 @@ public class BossFighterBase extends FighterBase {
             theta += sinSpeed;
         }
 
-        Log.d("","りnextX:"+nextX);
+        Log.d("", "りnextX:" + nextX);
         // 求められた移動先座標を設定する
         setPosition(getPositionX() + nextX, nextY);
     }
 
-	@Override
-	public void update() {
-		switch (attackType) {
-		case ShotStraight:
-			updateStraight();
-			break;
-		case Snipe:
-			updateSnipe();
-			break;
-		case AllDirection:
-			onUpdateAllDirection();
-			break;
-		case Laser:
-			onUpdateLaser();
-			break;
-		case LaserAndDirection:
-			onUpdateLaserAndDirection();
-			break;
-		default:
-			// 何もしない
-			break;
-		}
+    @Override
+    public void update() {
 
-		switch (moveType) {
-		case Straight:
-			onUpdateStraignt();
-			break;
-		case Curved:
-			onUpdateCurved();
-			break;
-		default:
-			//動かない
-			break;
-		}
-		++frameCount;
-	}
+        if (conductFrame.get(conductNumber) == frameCount) {
 
-	@Override
-	public void draw() {
-		// 撃墜されている場合は描画を行わない
-		if (isDead()) {
-			return;
-		}
-		super.draw();
-	}
-
-	@Override
-	public boolean isAppearedDisplay() {
-		Rect spriteArea = sprite.getDstRect();
-
-		if (spriteArea.right < 0) {
-			// スプライトの右端が画面よりも左にある場合、画面外となる
-			return false;
-		}
-
-		if (spriteArea.left > Define.VIRTUAL_DISPLAY_WIDTH) {
-			// スプライトの左端が画面よりも右にある場合、画面外となる
-			return false;
-		}
-
-		if (spriteArea.top > Define.VIRTUAL_DISPLAY_HEIGHT) {
-			// スプライトの上端が画面よりも下にある場合、画面外となる
-			return false;
-		}
-
-		// どれにも該当しない場合、画面内（もしくは画面上部）にいる
-		return true;
-	}
-
-	/**
-	 * まっすぐ弾を撃つ場合の更新
-	 */
-	void updateStraight() {
-
-		// 指定したフレームで処理を行わせる
-		if (frameCount == 30 * 3) {
-			// 150フレーム経過したら弾を撃って行動カウンターをリセットする。
-			FrisbeeBullet bullet = new FrisbeeBullet(scene, this);
-			((PlaySceneBase) scene).addBullet(bullet);
-
-			resetFrameCount();
-		}
-	}
-
-	/**
-	 * 狙撃する場合の更新
-	 */
-	void updateSnipe() {
-		// 指定したフレームで処理を行わせる
-		if (frameCount == 30 * 3) {
-			SnipeBullet bullet = new SnipeBullet(scene, this);
-			bullet.setup(((PlaySceneBase) scene).getPlayer(), 20);
-
-			((PlaySceneBase) scene).addBullet(bullet);
-
-			resetFrameCount();
-		}
-	}
-	/**
-	 * 全方位攻撃トンガリの更新
-	 */
-	void onUpdateAllDirection() {
-		final int ATTACK_START_FRAME = 90;
-		final int ATTACK_END_FRAME = ATTACK_START_FRAME + 360;
-
-		if (frameCount >= ATTACK_START_FRAME && frameCount <= (ATTACK_END_FRAME)) {
-			// インベーダーの時よりも高い頻度で攻撃
-			if (frameCount % 5 == 0) {
-
-				// 方向弾を生成する
-				DirectionBullet bullet = new DirectionBullet(scene, this);
-				// 現在のフレーム数の角度へ10の速度で打ち込む
-				bullet.setup(180 - ATTACK_START_FRAME + frameCount, 10);
-
-				// シーンに弾を追加する
-				((PlaySceneBase) scene).addBullet(bullet);
-
-			}
-		}
-	}
-
-	/**
-	 * レーザー攻撃トンガリの更新
-	 */
-	void onUpdateLaser() {
-		switch (frameCount) {
-		case 100: {
-			Laser laser = new Laser(scene, this);
-			((PlaySceneBase) scene).addBullet(laser);
-			resetFrameCount();
-		}
-		break;
-		case 300: {
-			resetFrameCount();
-		}
-		break;
-		}
-	}
-
-	/**
-	 * 複合攻撃トンガリの更新
-	 */
-	void onUpdateLaserAndDirection() {
-		onUpdateAllDirection();
-		onUpdateLaser();
-	}
-
-	public JSONObject toJson(){
-
-		JSONObject enemy = new JSONObject();
-
-		try {
-			enemy.put("attackType",attackType.toString());
-			enemy.put("moveType",moveType.toString());
-			enemy.put("imageType",image.toJSON());
-			enemy.put("x",x);
-			enemy.put("y",y);
-			
-			return enemy;
-			
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	@Override
-	public void setScene(GameSceneBase scene){
-		super.setScene(scene);
-		sprite = loadSprite(image);
-	}
-	
-	public int getX(){
-	    return x;
-	}
-	public int getY(){
-	    return y;
-	}
-
-    public AttackType getAttackType(){
-        return attackType;
-    }
-    public MoveType getMoveType(){
-        return moveType;
-    }
-    public Displayable getDisplayable(){
-        return image;
+            switch (conductArray.get(conductNumber)) {
+                case Shot:
+                    updateStraight();
+                    break;
+                case SnipeShot:
+                    updateSnipe();
+                    break;
+                case AllDirectionShot:
+                    onUpdateAllDirection();
+                    break;
+                case Laser:
+                    onUpdateLaser();
+                    break;
+                default:
+                    //動かない
+                    break;
+            }
+        }
+        ++frameCount;
     }
 
-    public float getCreateX() {
-        return createX;
+    @Override
+    public void draw() {
+        // 撃墜されている場合は描画を行わない
+        if (isDead()) {
+            return;
+        }
+        super.draw();
     }
 
+    @Override
+    public boolean isAppearedDisplay() {
+        Rect spriteArea = sprite.getDstRect();
 
-    public float getCreateY() {
-        return createY;
+        if (spriteArea.right < 0) {
+            // スプライトの右端が画面よりも左にある場合、画面外となる
+            return false;
+        }
+
+        if (spriteArea.left > Define.VIRTUAL_DISPLAY_WIDTH) {
+            // スプライトの左端が画面よりも右にある場合、画面外となる
+            return false;
+        }
+
+        if (spriteArea.top > Define.VIRTUAL_DISPLAY_HEIGHT) {
+            // スプライトの上端が画面よりも下にある場合、画面外となる
+            return false;
+        }
+
+        // どれにも該当しない場合、画面内（もしくは画面上部）にいる
+        return true;
     }
 
+    /**
+     * まっすぐ弾を撃つ場合の更新
+     */
+    void updateStraight() {
+            FrisbeeBullet bullet = new FrisbeeBullet(scene, this);
+            ((PlaySceneBase) scene).addBullet(bullet);
+
+            resetFrameCount();
+    }
+
+    /**
+     * 狙撃する場合の更新
+     */
+    void updateSnipe() {
+            SnipeBullet bullet = new SnipeBullet(scene, this);
+            bullet.setup(((PlaySceneBase) scene).getPlayer(), 20);
+
+            ((PlaySceneBase) scene).addBullet(bullet);
+
+            resetFrameCount();
+    }
+
+    /**
+     * 全方位攻撃トンガリの更新
+     */
+    void onUpdateAllDirection() {
+            if (frameCount % 5 == 0) {
+
+                // 方向弾を生成する
+                DirectionBullet bullet = new DirectionBullet(scene, this);
+                // 現在のフレーム数の角度へ10の速度で打ち込む
+                bullet.setup(90 + frameCount, 10);
+
+                // シーンに弾を追加する
+                ((PlaySceneBase) scene).addBullet(bullet);
+
+        }
+        resetFrameCount();
+    }
+
+    /**
+     * レーザー攻撃トンガリの更新
+     */
+    void onUpdateLaser() {
+        switch (frameCount) {
+            case 0: {
+                Laser laser = new Laser(scene, this);
+                ((PlaySceneBase) scene).addBullet(laser);
+                resetFrameCount();
+            }
+            break;
+            case 200: {
+                resetFrameCount();
+            }
+            break;
+        }
+        resetFrameCount();
+    }
+
+    /**
+     * 複合攻撃トンガリの更新
+     */
+    void onUpdateLaserAndDirection() {
+        onUpdateAllDirection();
+        onUpdateLaser();
+    }
+
+    @Override
+    public BossFighterBase clone() {
+        BossFighterBase result = (BossFighterBase)super.clone();
+        result.conductArray = conductArray;
+        result.conductFrame = conductFrame;
+        result.conductNumber = conductNumber;
+        return result;
+    }
 }

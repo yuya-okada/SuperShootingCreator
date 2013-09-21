@@ -56,7 +56,6 @@ public class StageChoose extends Activity {
 
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                // TODO Auto-generated method stub
                 // 長押しクリックされた時の処理を記述
                 String msg = "ItemLongClick : Item" + (position + 1);
                 Log.v("OnItemLongClick", msg);
@@ -122,7 +121,11 @@ public class StageChoose extends Activity {
 
     @Override
     public void onDestroy() {
+        super.onDestroy();
         App.mp.stop();
 
     }
+
+
+
 }

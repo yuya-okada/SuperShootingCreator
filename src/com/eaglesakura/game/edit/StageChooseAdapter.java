@@ -21,6 +21,7 @@ public class StageChooseAdapter extends ArrayAdapter<String>{
         this.position = position;
         View v = super.getView(position,convertView,parent);
         v.setOnClickListener(new RowClickListener(position));
+        v.setOnLongClickListener(new RowLongClickListener(position));
         return v;
     }
 
@@ -42,8 +43,28 @@ public class StageChooseAdapter extends ArrayAdapter<String>{
             intent.putExtra("fromStageChooseActivity", true);
             getContext().startActivity(intent);
         }
-        public String getStageName(){
-            return stageName;
+
+    }
+
+    private class RowLongClickListener implements View.OnLongClickListener{
+
+        int position;
+        String stageName;
+
+        public RowLongClickListener(int i){
+            position = i;
+
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            Stage stage = StageContainer.getInstance().getStage(position);
+            stageName = stage.getStageName();
+
+            StageContainer stageContainer = StageContainer.getInstance();
+            stageContainer.removeItem(position);
+            remove(stageName);
+            return true;
         }
 
     }
