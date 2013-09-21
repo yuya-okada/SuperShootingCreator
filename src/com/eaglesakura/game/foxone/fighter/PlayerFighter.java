@@ -2,6 +2,7 @@ package com.eaglesakura.game.foxone.fighter;
 
 import android.graphics.Rect;
 
+import com.eaglesakura.game.bundle.Displayable;
 import com.eaglesakura.game.bundle.ResourceDisplayable;
 import com.eaglesakura.game.foxone.Define;
 import com.eaglesakura.game.foxone.R;
@@ -58,11 +59,9 @@ public class PlayerFighter extends FighterBase {
 	static final int MAX_HP = 10;
 
 	public PlayerFighter(GameSceneBase scene, JoyStick joyStick, AttackButton shotButton) {
-		super(scene);
+		super(scene, new ResourceDisplayable(R.drawable.player));
 		this.joyStick = joyStick;
 		this.shotButton = shotButton; // 攻撃ボタンを保持する
-		// プレイヤー画像の読み込み
-		sprite = loadSprite(new ResourceDisplayable(R.drawable.player));
 
 		// 初期位置を画面の下側中央にする
 		setPosition(Define.VIRTUAL_DISPLAY_WIDTH / 2, Define.VIRTUAL_DISPLAY_HEIGHT - 100);

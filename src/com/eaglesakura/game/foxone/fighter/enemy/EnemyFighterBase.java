@@ -20,74 +20,10 @@ import org.json.JSONObject;
 
 //public abstract class EnemyFighterBase extends FighterBase {
 public class EnemyFighterBase extends FighterBase {
-    float createX;
-    float createY;
-
 	/**
 	 * 攻撃手段
 	 */
 	AttackType attackType = AttackType.Not;
-
-	public enum AttackType {
-		/**
-		 * まっすぐに弾を撃つ
-		 */
-		ShotStraight,
-
-		/**
-		 * プレイヤーを狙撃する
-		 */
-		Snipe,
-		/**
-		 * 全方位弾を撃つ
-		 */
-		AllDirection,
-
-		/**
-		 * レーザーを撃つ
-		 */
-		Laser,
-
-		/**
-		 * 複合攻撃
-		 */
-		LaserAndDirection,
-		/**
-		 * 何もしない
-		 */
-		Not,
-
-
-	}
-	/**
-	 * 生成されてからのフレームを記録する。
-	 */
-	protected int frameCount = 0;
-
-	Displayable image = null;
-
-	/**
-	 * 移動手段を列挙する
-	 * @author TAKESHI YAMASHITA
-	 *
-	 */
-	public enum MoveType {
-		/**
-		 * 直線的に動く
-		 */
-		Straight,
-
-		/**
-		 * 曲線的に動く
-		 */
-		Curved,
-
-		/**
-		 * 動かない
-		 */
-		Not,
-	}
-
 
 	MoveType moveType = MoveType.Not;
 
@@ -115,51 +51,18 @@ public class EnemyFighterBase extends FighterBase {
 	 * Cuve移動でのXの移動速度
 	 */
 	float moveSpeedX = 5f;
-	
-	/**
-	 * 敵のX座標
-	 */
-	int x;
-	
-	/**
-	 * 敵のY座標
-	 */
-	int y;
 
 	//public EnemyFighterBase(int x,int y) {
 		//this(ImageType.Frisbee ,MoveType.Straight,AttackType.Not,x,y,null);
 	//}
+
 	public EnemyFighterBase(Displayable image,MoveType moveType,AttackType attackType,int x,int y) {
-		this(image,moveType,attackType,x,y,null);
+		this(0,image,moveType,attackType,x,y,null);
 	}
-	public EnemyFighterBase(Displayable image,MoveType moveType,AttackType attackType,int x,int y,GameSceneBase scene) {
-		super(scene);
-
-		
-		this.x = x;
-		
-		this.y = y;
-		
-		// 攻撃手段を保持する
-		this.attackType = attackType;
-
-		this.moveType = moveType;
-
-		this.image = image;
-		// 攻撃手段によって、敵の見た目を変化させる
-		
-		if(scene != null){
-			sprite = loadSprite(image);
-		}
-
-
-        final int PLAY_AREA_WIDTH = Define.PLAY_AREA_RIGHT - Define.PLAY_AREA_LEFT;
-
-        createX = PLAY_AREA_WIDTH / 5f * x;
-        createX += PLAY_AREA_WIDTH / 5f / 2f;
-        createX += Define.PLAY_AREA_LEFT;
-        createY = Define.VIRTUAL_DISPLAY_HEIGHT-PLAY_AREA_WIDTH / 5 * y;
-
+	public EnemyFighterBase(int createFrame,Displayable image,MoveType moveType,AttackType attackType,int x,int y,GameSceneBase scene) {
+		super(createFrame, image, x, y, scene);
+        this.moveType = moveType;
+        this.attackType = attackType;
     }
 
 	/**
@@ -218,28 +121,26 @@ public class EnemyFighterBase extends FighterBase {
 	/**
 	 * 左右のジグザグ移動を行う
 	 */
-	void onUpdateCurved() {
+    void onUpdateCurved() {
 
-        sinSpeed = 1;
+        sinSpeed = 0.1f;
 
         // 移動先のY座標は単純な加算でよい
-		float nextY = getPositionY() + moveSpeed;
-
+        float nextY = getPositionY() + moveSpeed;
 
         // 移動先のX座標はsinから計算を行う
-		float nextX = 0;
-		{
-			float xMove = (float) Math.sin(theta) * 70f;
-			nextX = centerX + xMove;
-			// sinの値をすすめる
-			theta += sinSpeed;
-
-		}
+        float nextX = 0;
+        {
+            float xMove = (float) Math.sin(theta) * 5f;
+            nextX = xMove;
+            // sinの値をすすめる
+            theta += sinSpeed;
+        }
 
         Log.d("","りnextX:"+nextX);
         // 求められた移動先座標を設定する
-		setPosition(getPositionX()+nextX, nextY);
-	}
+        setPosition(getPositionX() + nextX, nextY);
+    }
 
 	@Override
 	public void update() {
@@ -388,55 +289,31 @@ public class EnemyFighterBase extends FighterBase {
 		onUpdateLaser();
 	}
 
-	public JSONObject toJson(){
-
-		JSONObject enemy = new JSONObject();
-
-		try {
-			enemy.put("attackType",attackType.toString());
-			enemy.put("moveType",moveType.toString());
-			enemy.put("imageType",image.toJSON());
-			enemy.put("x",x);
-			enemy.put("y",y);
-			
-			return enemy;
-			
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
 	@Override
 	public void setScene(GameSceneBase scene){
 		super.setScene(scene);
 		sprite = loadSprite(image);
 	}
-	
-	public int getX(){
-	    return x;
-	}
-	public int getY(){
-	    return y;
-	}
 
-    public AttackType getAttackType(){
-        return attackType;
-    }
-    public MoveType getMoveType(){
-        return moveType;
-    }
-    public Displayable getDisplayable(){
-        return image;
+    @Override
+    public JSONObject toJson() {
+        JSONObject jsonObject = super.toJson();
+        try {
+            jsonObject.put("attackType",attackType.toString());
+            jsonObject.put("moveType",moveType.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
     }
 
-    public float getCreateX() {
-        return createX;
-    }
-
-
-    public float getCreateY() {
-        return createY;
+    @Override
+    public EnemyFighterBase clone() {
+        EnemyFighterBase result = (EnemyFighterBase)super.clone();
+        result.theta = theta;
+        result.attackType = attackType;
+        result.moveType = moveType;
+        return result;
     }
 
 }

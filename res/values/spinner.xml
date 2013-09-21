@@ -25,5 +25,14 @@
         
         
     </string-array>
+    <string-array name="spinnerbossType">
+        <item>直進</item>
+        <item>通常</item>
+        <item>狙撃</item>
+        <item>全方位弾</item>
+        <item>レーザー</item>
+        <item>全方位弾＆レーザー</item>
+        <item>なにもしない</item>
 
+    </string-array>
 </resources>
