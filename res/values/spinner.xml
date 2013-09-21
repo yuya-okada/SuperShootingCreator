@@ -26,12 +26,15 @@
         
     </string-array>
     <string-array name="spinnerbossType">
-        <item>直進</item>
         <item>通常</item>
         <item>狙撃</item>
         <item>全方位弾</item>
         <item>レーザー</item>
         <item>全方位弾＆レーザー</item>
+        <item>下へ移動</item>
+        <item>上へ移動</item>
+        <item>右へ移動</item>
+        <item>左へ移動</item>
         <item>なにもしない</item>
 
     </string-array>
