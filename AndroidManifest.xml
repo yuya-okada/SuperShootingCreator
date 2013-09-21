@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.eaglesakura.game.foxone"
-    android:versionCode="1"
-    android:versionName="1.0" >
+    package="com.gult.shootingcreator"
+    android:versionCode="2"
+    android:versionName="1.1" >
 
     <uses-sdk android:minSdkVersion="8" />
 
     <application
         android:icon="@drawable/icon"
         android:label="@string/app_name"
-        android:name="com.eaglesakura.game.App">
+        android:name="com.eaglesakura.shootingcreator.App">
         <activity
-            android:name="com.eaglesakura.game.edit.MainActivity"
+            android:name="com.eaglesakura.shootingcreator.edit.MainActivity"
             android:label="@string/title_activity_main"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
@@ -19,31 +19,31 @@
             
         </activity>
         <activity
-            android:name="com.eaglesakura.game.foxone.InvaderGameActivity"
+            android:name="com.gult.shootingcreator.InvaderGameActivity"
             android:label="@string/app_name" >
         </activity>
         <activity
-            android:name="com.eaglesakura.game.edit.PlayerOptionActivity"
+            android:name="com.eaglesakura.shootingcreator.edit.PlayerOptionActivity"
             android:label="@string/title_activity_player_option" >
         </activity>
         <activity
-            android:name="com.eaglesakura.game.edit.ConfigurationEnemyActivity"
+            android:name="com.eaglesakura.shootingcreator.edit.ConfigurationEnemyActivity"
             android:label="@string/title_activity_configuration_enemy" >
         </activity>
         <activity
-                android:name="com.eaglesakura.game.edit.GridActivity"
+                android:name="com.eaglesakura.shootingcreator.edit.GridActivity"
                 android:label="@string/title_activity_configuration_enemy" >
         </activity>
         <activity
-                android:name="com.eaglesakura.game.edit.ConfigurationBossActivity"
+                android:name="com.eaglesakura.shootingcreator.edit.ConfigurationBossActivity"
                 android:label="@string/title_activity_configuration_enemy" >
         </activity>
         <activity
-                android:name="com.eaglesakura.game.edit.EnemyConfigTab"
+                android:name="com.eaglesakura.shootingcreator.edit.EnemyConfigTab"
                 android:label="EnemyConfigTab" >
         </activity>
         <activity
-            android:name="com.eaglesakura.game.edit.TitleActivitty"
+            android:name="com.eaglesakura.shootingcreator.edit.TitleActivitty"
             android:label="@string/title_activity_title_activitty" >
             
         <intent-filter>
@@ -53,7 +53,7 @@
             </intent-filter>
         </activity>
         <activity
-                android:name="com.eaglesakura.game.edit.StageChoose"
+                android:name="com.eaglesakura.shootingcreator.edit.StageChoose"
                 android:label="@string/title_activity_title_activitty" >
         </activity>
 
