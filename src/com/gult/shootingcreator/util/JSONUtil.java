@@ -2,6 +2,8 @@ package com.gult.shootingcreator.util;
 
 import android.content.Context;
 
+import com.parse.ParseObject;
+
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -42,5 +44,15 @@ public class JSONUtil {
         }
     }
 
+    public ParseObject toEnemyParseObject(JSONObject jsonObject){
+        ParseObject parseObject = new ParseObject("Enemy");
+
+        try{
+        parseObject.put("enemy",jsonObject);
+        }catch (Exception e){
+
+        }
+        return parseObject;
+    }
 
 }

@@ -46,7 +46,7 @@ public abstract class FighterBase extends GameSprite implements Cloneable {
         Laser,
 
         /**
-         * 複合攻撃
+         * 複合攻撃as
          */
         LaserAndDirection,
         /**
