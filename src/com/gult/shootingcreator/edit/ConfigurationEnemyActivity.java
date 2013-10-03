@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 
@@ -44,7 +45,9 @@ public class ConfigurationEnemyActivity extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-
+        ArrayAdapter<String> adapterMove = new ArrayAdapter<String>(getActivity(), R.layout.spinner_item, getResources().getStringArray(R.array.spinnermoveType));
+        ArrayAdapter<String> adapterAttack = new ArrayAdapter<String>(getActivity(), R.layout.spinner_item, getResources().getStringArray(R.array.spinnerattackType));
+        ArrayAdapter<String> adapterImage = new ArrayAdapter<String>(getActivity(), R.layout.spinner_item, getResources().getStringArray(R.array.spinnerimageType));
         doneButton = (Button)getView().findViewById(R.id.done);
         doneButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,6 +59,10 @@ public class ConfigurationEnemyActivity extends Fragment {
         Spinner spinnerMove = (Spinner)getView().findViewById(R.id.spinner1);
         Spinner spinnerAttack = (Spinner)getView().findViewById(R.id.spinner2);
         Spinner spinnerImage = (Spinner)getView().findViewById(R.id.spinner3);
+        spinnerMove.setAdapter(adapterMove);
+        spinnerAttack.setAdapter(adapterAttack);
+        spinnerImage.setAdapter(adapterImage);
+
 
         spinnerMove.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

@@ -21,14 +21,17 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
 import com.gult.shootingcreator.App;
+import com.gult.shootingcreator.R;
 import com.gult.shootingcreator.bundle.Displayable;
 import com.gult.shootingcreator.foxone.InvaderGameActivity;
-import com.gult.shootingcreator.R;
 import com.gult.shootingcreator.foxone.fighter.FighterBase;
-import com.gult.shootingcreator.foxone.fighter.enemy.BossFighterBase;
-import com.gult.shootingcreator.foxone.fighter.enemy.EnemyFighterBase;
 import com.gult.shootingcreator.foxone.fighter.FighterBase.AttackType;
 import com.gult.shootingcreator.foxone.fighter.FighterBase.MoveType;
+import com.gult.shootingcreator.foxone.fighter.enemy.BossFighterBase;
+import com.gult.shootingcreator.foxone.fighter.enemy.EnemyFighterBase;
+import com.parse.ParseObject;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -42,6 +45,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private Stage stage;
 
     Button buttonint;
+    Button buttonUp;
     /**
      * ステージ名
      */
@@ -117,12 +121,18 @@ public class MainActivity extends Activity implements View.OnClickListener {
             Drawable drawable = enemy.getDisplayable().getDrawable(this);
             button.get(100 - enemy.getY()).get(enemy.getX()).setImageDrawable(drawable);
         }
+        buttonUp = new Button(this);
+        buttonUp.setText("ステージを公開");
+        buttonUp.setBackgroundDrawable(getResources().getDrawable(R.drawable.btn_18));
+        buttonUp.setOnClickListener(new OnRelease());
+        linearLayout.addView(buttonUp);
 
         buttonint = new Button(this);
         buttonint.setText("テストプレイ");
         buttonint.setBackgroundDrawable(getResources().getDrawable(R.drawable.btn_18));
         buttonint.setOnClickListener(new OnEndButton());
         linearLayout.addView(buttonint);
+
 
         scrollView.post(new Runnable() {
             @Override
@@ -332,6 +342,15 @@ public class MainActivity extends Activity implements View.OnClickListener {
             IntentTestPlay();
         }
     }
+    private class OnRelease implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            ParseObject uploadData = new ParseObject("StageData");
+            JSONObject jsonObject = new JSONObject();
+            //uploadData.add();
+        }
+    }
+
 
     public void saveStage() {
         if (stageNumber == -1) {

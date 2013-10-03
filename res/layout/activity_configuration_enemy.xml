@@ -3,34 +3,40 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ConfigurationEnemyActivity"
-    android:background="#000000">
+    android:background="@drawable/bg_top">
 
     <Spinner
         android:id="@+id/spinner1"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_marginTop="48dp"
-        android:entries="@array/spinnermoveType" />
+        android:entries="@array/spinnermoveType"
+        android:background="@drawable/spinner_18"
+        android:gravity="center"/>
 
     <Spinner
         android:id="@+id/spinner2"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/spinner1"
         android:layout_marginTop="39dp"
-        android:entries="@array/spinnerattackType" />
+        android:entries="@array/spinnerattackType"
+        android:background="@drawable/spinner_18"
+        android:gravity="center"/>
 
     <Spinner
         android:id="@+id/spinner3"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/spinner2"
         android:layout_marginTop="37dp"
-        android:entries="@array/spinnerimageType" />
+        android:entries="@array/spinnerimageType"
+        android:background="@drawable/spinner_18"
+        android:gravity="center"/>
 
     <TextView
         android:id="@+id/textView1"
@@ -62,11 +68,13 @@
 
     <Button
         android:id="@+id/done"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_marginBottom="30dp"
-        android:text="完了" />
+        android:text="完了"
+        android:gravity="center"
+        android:background="@drawable/btn_18" />
 
 </RelativeLayout>

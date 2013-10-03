@@ -45,17 +45,17 @@ public class ConfigurationBossActivity extends Fragment {
 
 
         baseIntent = getActivity().getIntent();
-
         adapter  = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1);
-
-
         return inflater.inflate(R.layout.activity_configuration_boss, container, false);
 
     }
 
+
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
 
+        ArrayAdapter<String> adapterConduct = new ArrayAdapter<String>(getActivity(), R.layout.spinner_item, getResources().getStringArray(R.array.spinnerbossType));
+        ArrayAdapter<String> adapterImage = new ArrayAdapter<String>(getActivity(), R.layout.spinner_item, getResources().getStringArray(R.array.spinnerimageType));
         addButton = (Button)getView().findViewById(R.id.add);
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,11 +74,12 @@ public class ConfigurationBossActivity extends Fragment {
         Spinner spinnerConduct = (Spinner)getView().findViewById(R.id.conduct);
         listView = (ListView)getView().findViewById(R.id.listView);
 
+        spinnerConduct.setAdapter(adapterConduct);
+        spinnerImage.setAdapter(adapterImage);
 
         spinnerConduct.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view,
-                                       int position, long id) {
+            public void onItemSelected(AdapterView<?> parent, View view,int position, long id) {
                 String selectedItem = parent.getItemAtPosition(position).toString();
                 if (selectedItem .equals("通常")){
                     conduct = "通常の銃弾を発射";

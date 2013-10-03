@@ -3,7 +3,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#000000">
+            android:background="@drawable/bg_top">
 
     <LinearLayout
             android:orientation="vertical"
@@ -13,18 +13,23 @@
 
         <Spinner
                 android:id="@+id/image"
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_below="@+id/spinner2"
                 android:layout_marginTop="37dp"
-                android:entries="@array/spinnerimageType" />
+                android:entries="@array/spinnerimageType"
+                android:background="@drawable/spinner_18"
+                android:gravity="center"/>
 
 
 
         <LinearLayout
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
+                android:layout_height="fill_parent"
+                android:layout_marginTop="30dp"
+
+                >
 
             <Button
                     android:layout_width="100dp"
@@ -33,13 +38,17 @@
                     android:id="@+id/add"
                     android:layout_weight="1"
                     android:layout_gravity="center_horizontal|top"
-                    android:onClick="add"/>
+                    android:onClick="add"
+                    android:background="@drawable/btn_18"/>
 
             <Spinner
                     android:layout_width="300dp"
                     android:layout_height="fill_parent"
                     android:id="@+id/conduct"
                     android:entries="@array/spinnerbossType"
+                    android:background="@drawable/spinner_18"
+                    android:layout_marginLeft="10dp"
+                    android:gravity="center"
                     />
 
         </LinearLayout>
@@ -50,11 +59,12 @@
                 android:id="@+id/listView"/>
 
         <Button
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="完了"
                 android:id="@+id/done"
-                android:layout_gravity="left|center_vertical"
+                android:layout_gravity="center"
+                android:background="@drawable/btn_18"
                 />
 
 
