@@ -17,6 +17,10 @@ import com.gult.shootingcreator.foxone.fighter.FighterBase;
 import com.gult.shootingcreator.foxone.scene.GameSceneBase;
 import com.gult.shootingcreator.foxone.scene.PlaySceneBase;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 //public abstract class EnemyFighterBase extends FighterBase {
@@ -339,6 +343,22 @@ public class BossFighterBase extends FighterBase {
         result.conductFrame = conductFrame;
         result.conductNumber = conductNumber;
         return result;
+    }
+
+    @Override
+    public JSONObject toJson() {
+        JSONObject jsonObject = super.toJson();
+        JSONArray conductJSONArray = new JSONArray();
+        for(ConductType conductType: this.conductArray) {
+            conductJSONArray.put(conductType.toString());
+        }
+        try {
+            jsonObject.put("conduct", conductJSONArray);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return jsonObject;
     }
 
 
