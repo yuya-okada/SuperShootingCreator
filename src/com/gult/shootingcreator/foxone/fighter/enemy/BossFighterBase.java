@@ -21,7 +21,7 @@ import java.util.ArrayList;
 
 //public abstract class EnemyFighterBase extends FighterBase {
 public class BossFighterBase extends FighterBase {
-    int conductNumber = 1;
+    int conductNumber = 0;
     boolean appearance = true;
 
     public enum ConductType implements Parcelable {
