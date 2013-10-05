@@ -26,6 +26,10 @@ public abstract class GameSprite {
      */
     protected GameSceneBase scene = null;
 
+    protected GameSprite() {
+        this(null);
+    }
+
     protected GameSprite(GameSceneBase scene) {
         this.scene = scene;
     }
