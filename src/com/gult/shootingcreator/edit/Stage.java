@@ -65,9 +65,10 @@ public class Stage {
 
             for (int i = 0; i < jsonArray.length(); i++) {
 
-                JSONObject enemy = jsonArray.getJSONObject(i);
+                JSONObject enemyData = jsonArray.getJSONObject(i);
+                JSONObject enemy = enemyData.getJSONObject("data");
 
-                if (enemy.getString("type").equals("Normal")) {
+                if (enemyData.getString("type").equals("Normal")) {
 
                     AttackType attackType = AttackType.valueOf(enemy.getString("attackType"));
                     MoveType moveType = MoveType.valueOf(enemy.getString("moveType"));
@@ -79,9 +80,9 @@ public class Stage {
                     EnemyFighterBase enemyFighterBase = new EnemyFighterBase(displayable, moveType, attackType, x, y);
                     enemyFighterBases.add(enemyFighterBase);
 
-                } else if (enemy.getString("type").equals("Boss")) {
+                } else if (enemyData.getString("type").equals("Boss")) {
 
-                    JSONArray conductsJSON = enemy.getJSONArray("conducy");
+                    JSONArray conductsJSON = enemy.getJSONArray("conduct");
                     ArrayList<BossFighterBase.ConductType> conductArray = new ArrayList<BossFighterBase.ConductType>();
 
                     for (int j = 0; i < conductsJSON.length(); i++) {
@@ -100,6 +101,7 @@ public class Stage {
 
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
 
         Stage stage = new Stage(stageName, enemyFighterBases);
