@@ -64,48 +64,14 @@ public class Stage {
             JSONArray jsonArray = jsonObject.getJSONArray("enemies");
 
             for (int i = 0; i < jsonArray.length(); i++) {
-
                 JSONObject enemyData = jsonArray.getJSONObject(i);
-                JSONObject enemy = enemyData.getJSONObject("data");
-
-                if (enemyData.getString("type").equals("Normal")) {
-
-                    AttackType attackType = AttackType.valueOf(enemy.getString("attackType"));
-                    MoveType moveType = MoveType.valueOf(enemy.getString("moveType"));
-                    Displayable displayable = DisplayableFactory.createFromJSON(enemy.getJSONObject("imageType"));
-
-                    int x = enemy.getInt("x");
-                    int y = enemy.getInt("y");
-
-                    EnemyFighterBase enemyFighterBase = new EnemyFighterBase(displayable, moveType, attackType, x, y);
-                    enemyFighterBases.add(enemyFighterBase);
-
-                } else if (enemyData.getString("type").equals("Boss")) {
-
-                    JSONArray conductsJSON = enemy.getJSONArray("conduct");
-                    ArrayList<BossFighterBase.ConductType> conductArray = new ArrayList<BossFighterBase.ConductType>();
-
-                    for (int j = 0; i < conductsJSON.length(); i++) {
-                        conductArray.add(BossFighterBase.ConductType.valueOf(conductsJSON.get(i).toString()));
-                    }
-                    Displayable displayable = DisplayableFactory.createFromJSON(enemy.getJSONObject("imageType"));
-
-                    int x = enemy.getInt("x");
-                    int y = enemy.getInt("y");
-
-                    BossFighterBase bossFighterBase = new BossFighterBase(displayable, conductArray, x, y);
-                    enemyFighterBases.add(bossFighterBase);
-
-                }
-
-
+                enemyFighterBases.add(FighterBase.createFromJSON(enemyData));
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        Stage stage = new Stage(stageName, enemyFighterBases);
-        return stage;
+        return new Stage(stageName, enemyFighterBases);
     }
 
     public ArrayList<FighterBase> getEnemies() {

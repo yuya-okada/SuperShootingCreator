@@ -97,6 +97,10 @@ public class BossFighterBase extends FighterBase {
      */
     float moveSpeedX = 5f;
 
+    public BossFighterBase(JSONObject jsonObject) {
+        super(jsonObject);
+    }
+
     public BossFighterBase(BossFighterBase toCopy) {
         this(toCopy.getDisplayable(), toCopy.conductArray, toCopy.getX(), toCopy.getY(), toCopy.getScene());
     }
@@ -357,8 +361,16 @@ public class BossFighterBase extends FighterBase {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
         return jsonObject;
+    }
+
+    @Override
+    protected void fromJson(JSONObject jsonObject) {
+        super.fromJson(jsonObject);
+        JSONArray conductsArray = jsonObject.optJSONArray("conduct");
+        for(int i = 0; i < conductArray.size(); i++) {
+            this.conductArray.add(ConductType.valueOf(conductsArray.optString(i)));
+        }
     }
 
 

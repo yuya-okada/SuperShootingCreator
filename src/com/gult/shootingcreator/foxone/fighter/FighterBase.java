@@ -3,11 +3,15 @@ package com.gult.shootingcreator.foxone.fighter;
 import android.graphics.Rect;
 
 import com.gult.shootingcreator.bundle.Displayable;
+import com.gult.shootingcreator.bundle.DisplayableFactory;
 import com.gult.shootingcreator.foxone.Define;
 import com.gult.shootingcreator.foxone.GameSprite;
 import com.gult.shootingcreator.foxone.bullet.BulletBase;
+import com.gult.shootingcreator.foxone.fighter.enemy.BossFighterBase;
+import com.gult.shootingcreator.foxone.fighter.enemy.EnemyFighterBase;
 import com.gult.shootingcreator.foxone.scene.GameSceneBase;
 import com.eaglesakura.lib.android.game.graphics.Sprite;
+import com.gult.shootingcreator.foxone.scene.GameSceneStage1;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -88,6 +92,10 @@ public abstract class FighterBase extends GameSprite implements Cloneable {
      * デフォルトは1にしておく。
      */
     protected int hp = 1;
+
+    protected FighterBase(JSONObject jsonObject) {
+        fromJson(jsonObject);
+    }
 
     public FighterBase(GameSceneBase scene) {
         this(scene, null);
@@ -193,6 +201,25 @@ public abstract class FighterBase extends GameSprite implements Cloneable {
         }
         return null;
     }
+
+    public static FighterBase createFromJSON(JSONObject jsonObject) {
+        FighterBase fighterBase = null;
+        String type = jsonObject.optString("type");
+        JSONObject enemy = jsonObject.optJSONObject("data");
+        if(type.equals("Normal")) {
+            fighterBase = new EnemyFighterBase(enemy);
+        } else if(type.equals("Boss")) {
+            fighterBase = new BossFighterBase(enemy);
+        }
+        return fighterBase;
+    }
+
+    protected void fromJson(JSONObject jsonObject) {
+        this.image = DisplayableFactory.createFromJSON(jsonObject.optJSONObject("imageType"));
+        this.x = jsonObject.optInt("x");
+        this.y = jsonObject.optInt("y");
+    }
+
     public int getX(){
         return x;
     }
