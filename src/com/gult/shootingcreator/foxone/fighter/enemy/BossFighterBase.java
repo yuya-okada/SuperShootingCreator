@@ -17,11 +17,15 @@ import com.gult.shootingcreator.foxone.fighter.FighterBase;
 import com.gult.shootingcreator.foxone.scene.GameSceneBase;
 import com.gult.shootingcreator.foxone.scene.PlaySceneBase;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 //public abstract class EnemyFighterBase extends FighterBase {
 public class BossFighterBase extends FighterBase {
-    int conductNumber = 1;
+    int conductNumber = 0;
     boolean appearance = true;
 
     public enum ConductType implements Parcelable {
@@ -61,9 +65,8 @@ public class BossFighterBase extends FighterBase {
     /**
      * 敵の行動パターン
      */
-    ArrayList<ConductType> conductArray = new ArrayList<ConductType>();
-
-    ArrayList<Integer> conductFrame = new ArrayList<Integer>();
+    ArrayList<ConductType> conductArray;
+    ArrayList<Integer> conductFrame;
 
 
     ConductType continueConduct;
@@ -93,6 +96,10 @@ public class BossFighterBase extends FighterBase {
      */
     float moveSpeedX = 5f;
 
+    public BossFighterBase(JSONObject jsonObject) {
+        super(jsonObject);
+    }
+
     public BossFighterBase(BossFighterBase toCopy) {
         this(toCopy.getDisplayable(), toCopy.conductArray, toCopy.getX(), toCopy.getY(), toCopy.getScene());
     }
@@ -106,6 +113,8 @@ public class BossFighterBase extends FighterBase {
         super(0, image, x, y, scene);
 
         hp=20;
+
+        conductFrame = new ArrayList<Integer>();
 
         // 攻撃手段を保持する
         this.conductArray = conductArray;
@@ -339,6 +348,31 @@ public class BossFighterBase extends FighterBase {
         result.conductFrame = conductFrame;
         result.conductNumber = conductNumber;
         return result;
+    }
+
+    @Override
+    public JSONObject toJson() {
+        JSONObject jsonObject = super.toJson();
+        JSONArray conductJSONArray = new JSONArray();
+        for(ConductType conductType: this.conductArray) {
+            conductJSONArray.put(conductType.toString());
+        }
+        try {
+            jsonObject.put("conduct", conductJSONArray);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
+    }
+
+    @Override
+    protected void fromJson(JSONObject jsonObject) {
+        super.fromJson(jsonObject);
+        this.conductArray = new ArrayList<ConductType>();
+        JSONArray conductsJSONArray = jsonObject.optJSONArray("conduct");
+        for(int i = 0; i < conductsJSONArray.length(); i++) {
+            this.conductArray.add(ConductType.valueOf(conductsJSONArray.optString(i)));
+        }
     }
 
 
