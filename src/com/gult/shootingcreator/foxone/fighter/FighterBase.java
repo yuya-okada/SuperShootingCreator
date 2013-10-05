@@ -95,6 +95,7 @@ public abstract class FighterBase extends GameSprite implements Cloneable {
 
     protected FighterBase(JSONObject jsonObject) {
         fromJson(jsonObject);
+        setCreatePoint();
     }
 
     public FighterBase(GameSceneBase scene) {
@@ -121,7 +122,10 @@ public abstract class FighterBase extends GameSprite implements Cloneable {
             sprite = loadSprite(image);
         }
 
+        setCreatePoint();
+    }
 
+    private void setCreatePoint() {
         final int PLAY_AREA_WIDTH = Define.PLAY_AREA_RIGHT - Define.PLAY_AREA_LEFT;
 
         createX = PLAY_AREA_WIDTH / 5f * x;
