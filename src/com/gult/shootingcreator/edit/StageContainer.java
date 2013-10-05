@@ -47,6 +47,7 @@ public class StageContainer {
             }
 
         } catch (Exception e) {
+            e.printStackTrace();
         }
 
     }

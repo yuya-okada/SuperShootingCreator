@@ -56,6 +56,10 @@ public class EnemyFighterBase extends FighterBase {
 		//this(ImageType.Frisbee ,MoveType.Straight,AttackType.Not,x,y,null);
 	//}
 
+    public EnemyFighterBase(JSONObject jsonObject) {
+        super(jsonObject);
+    }
+
 	public EnemyFighterBase(Displayable image,MoveType moveType,AttackType attackType,int x,int y) {
 		this(0,image,moveType,attackType,x,y,null);
 	}
@@ -305,6 +309,13 @@ public class EnemyFighterBase extends FighterBase {
             e.printStackTrace();
         }
         return jsonObject;
+    }
+
+    @Override
+    protected void fromJson(JSONObject jsonObject) {
+        super.fromJson(jsonObject);
+        this.attackType = AttackType.valueOf(jsonObject.optString("attackType"));
+        this.moveType = MoveType.valueOf(jsonObject.optString("moveType"));
     }
 
     @Override
