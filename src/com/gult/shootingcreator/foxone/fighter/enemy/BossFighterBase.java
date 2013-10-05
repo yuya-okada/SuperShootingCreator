@@ -65,9 +65,8 @@ public class BossFighterBase extends FighterBase {
     /**
      * 敵の行動パターン
      */
-    ArrayList<ConductType> conductArray = new ArrayList<ConductType>();
-
-    ArrayList<Integer> conductFrame = new ArrayList<Integer>();
+    ArrayList<ConductType> conductArray;
+    ArrayList<Integer> conductFrame;
 
 
     ConductType continueConduct;
@@ -114,6 +113,8 @@ public class BossFighterBase extends FighterBase {
         super(0, image, x, y, scene);
 
         hp=20;
+
+        conductFrame = new ArrayList<Integer>();
 
         // 攻撃手段を保持する
         this.conductArray = conductArray;
@@ -367,9 +368,10 @@ public class BossFighterBase extends FighterBase {
     @Override
     protected void fromJson(JSONObject jsonObject) {
         super.fromJson(jsonObject);
-        JSONArray conductsArray = jsonObject.optJSONArray("conduct");
-        for(int i = 0; i < conductArray.size(); i++) {
-            this.conductArray.add(ConductType.valueOf(conductsArray.optString(i)));
+        this.conductArray = new ArrayList<ConductType>();
+        JSONArray conductsJSONArray = jsonObject.optJSONArray("conduct");
+        for(int i = 0; i < conductsJSONArray.length(); i++) {
+            this.conductArray.add(ConductType.valueOf(conductsJSONArray.optString(i)));
         }
     }
 
