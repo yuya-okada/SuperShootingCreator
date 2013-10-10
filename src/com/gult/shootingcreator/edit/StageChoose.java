@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.gult.shootingcreator.App;
 import com.gult.shootingcreator.R;
+import com.gult.shootingcreator.network.StoreActivity;
 import com.gult.shootingcreator.util.JSONUtil;
 
 import org.json.JSONArray;
@@ -124,6 +125,11 @@ public class StageChoose extends Activity {
         super.onDestroy();
         App.mp.stop();
 
+    }
+
+    public void GoToStore(View v){
+        Intent intent = new Intent(this, StoreActivity.class);
+        startActivity(intent);
     }
 
 

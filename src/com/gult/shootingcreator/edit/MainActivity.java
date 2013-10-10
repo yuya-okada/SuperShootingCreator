@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.Toast;
 
 import com.gult.shootingcreator.App;
 import com.gult.shootingcreator.R;
@@ -347,7 +348,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
         public void onClick(View v) {
             ParseObject uploadData = new ParseObject("StageData");
             JSONObject jsonObject = new JSONObject();
-            //uploadData.add();
+            uploadData.add(stageName, StageContainer.getInstance().getStageJSON(stageNumber));
+            uploadData.saveInBackground();
+            Toast.makeText(App.getContext(),"This stage was released",Toast.LENGTH_LONG).show();
         }
     }
 
