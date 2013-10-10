@@ -5,6 +5,14 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:background="@drawable/bg_top">
+    <Button
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="ストアへ"
+            android:id="@+id/store"
+            android:onClick="GoToStore"
+            android:background="@drawable/btn_18"
+            />
 
     <Button
             android:layout_width="fill_parent"

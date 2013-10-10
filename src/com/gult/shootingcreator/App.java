@@ -6,7 +6,7 @@ import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.preference.PreferenceManager;
 
-import com.gult.shootingcreator.R;
+import com.parse.Parse;
 
 /**
  * Created by okadakeiko on 13/08/24.
@@ -18,6 +18,8 @@ public class App extends Application {
     public  static final String DATA_FILE_KEY = "stageData";
 
     public void onCreate(){
+        //Parseを初期化
+        Parse.initialize(this, "hoi1RwcRUVTdF5eIs9NQcahevCtqKWP2i0aJMhkG", "xrEp9TCVoW4vvAqLjd7Jw9CCjxltf6l9ffcGzN9o");
 
         mp = MediaPlayer.create(this, R.raw.bgm_main);
 

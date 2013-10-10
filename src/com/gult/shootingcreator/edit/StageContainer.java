@@ -69,6 +69,23 @@ public class StageContainer {
 
     }
 
+    public JSONArray getStageJSON(int stageNumber){
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(App.getContext());
+        String filePath = sharedPreferences.getString(App.DATA_FILE_KEY, null);
+        JSONObject json = JSONUtil.loadFromFile(App.getContext(), filePath);
+        JSONArray jsonStages = null;
+        try {
+            jsonStages = json.getJSONArray("stages");
+
+            return jsonStages;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public Stage getStage(int stageNumber) {
 
         return stages.get(stageNumber);
