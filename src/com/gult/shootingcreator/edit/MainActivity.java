@@ -34,7 +34,6 @@ import com.gult.shootingcreator.foxone.fighter.enemy.EnemyFighterBase;
 import com.gult.shootingcreator.util.JSONUtil;
 import com.parse.ParseObject;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
