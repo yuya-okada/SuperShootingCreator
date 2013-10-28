@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.gult.shootingcreator.App;
 import com.gult.shootingcreator.R;
 import com.gult.shootingcreator.bundle.Displayable;
+import com.gult.shootingcreator.edit.EnemyConfig.EnemyConfigTab;
 import com.gult.shootingcreator.foxone.InvaderGameActivity;
 import com.gult.shootingcreator.foxone.fighter.FighterBase;
 import com.gult.shootingcreator.foxone.fighter.FighterBase.AttackType;
@@ -32,11 +33,13 @@ import com.gult.shootingcreator.foxone.fighter.enemy.BossFighterBase;
 import com.gult.shootingcreator.foxone.fighter.enemy.EnemyFighterBase;
 import com.parse.ParseObject;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 
 public class MainActivity extends Activity implements View.OnClickListener {
+
     ArrayList<FighterBase> enemyBaseArray;
     ScrollView scrollView;
 
@@ -305,7 +308,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                     enemyBaseArray.add(enemyFighterBase);
                 } else if (enemyType.equals("Boss")) {
                     ArrayList<BossFighterBase.ConductType> conductArray = data.getParcelableArrayListExtra("ConductArray");
-                     BossFighterBase bossFighterBase = new BossFighterBase(displayable, conductArray, x, y);
+                    BossFighterBase bossFighterBase = new BossFighterBase(displayable, conductArray, x, y);
                     enemyBaseArray.add(bossFighterBase);
                 }
             }
@@ -343,14 +346,16 @@ public class MainActivity extends Activity implements View.OnClickListener {
             IntentTestPlay();
         }
     }
+
     private class OnRelease implements View.OnClickListener {
         @Override
         public void onClick(View v) {
             ParseObject uploadData = new ParseObject("StageData");
             JSONObject jsonObject = new JSONObject();
+            JSONArray jsonArray = StageContainer.getInstance().getStageJSON(stageNumber);
             uploadData.add(stageName, StageContainer.getInstance().getStageJSON(stageNumber));
             uploadData.saveInBackground();
-            Toast.makeText(App.getContext(),"This stage was released",Toast.LENGTH_LONG).show();
+            Toast.makeText(App.getContext(), "This stage was released", Toast.LENGTH_LONG).show();
         }
     }
 

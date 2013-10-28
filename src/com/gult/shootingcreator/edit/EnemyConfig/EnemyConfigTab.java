@@ -1,4 +1,4 @@
-package com.gult.shootingcreator.edit;
+package com.gult.shootingcreator.edit.EnemyConfig;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

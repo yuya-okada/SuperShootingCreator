@@ -1,7 +1,9 @@
-package com.gult.shootingcreator.edit;
+package com.gult.shootingcreator.edit.EnemyConfig;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -11,33 +13,30 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.Spinner;
 
 import com.gult.shootingcreator.App;
+import com.gult.shootingcreator.R;
 import com.gult.shootingcreator.bundle.FileDisplayable;
 import com.gult.shootingcreator.bundle.ImageResourceDisplayable;
-import com.gult.shootingcreator.R;
+import com.gult.shootingcreator.edit.CustomAdapter;
+import com.gult.shootingcreator.edit.ImageList;
+import com.gult.shootingcreator.edit.MainActivity;
 import com.gult.shootingcreator.foxone.fighter.FighterBase.AttackType;
 import com.gult.shootingcreator.foxone.fighter.FighterBase.MoveType;
-import com.gult.shootingcreator.foxone.fighter.enemy.BossFighterBase.ConductType;
 import com.gult.shootingcreator.foxone.scene.GameSceneStage1.ImageType;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class ConfigurationBossActivity extends Fragment {
+public class ConfigurationEnemyActivity extends Fragment {
 	Context context = App.getContext();
     Intent baseIntent;
 	MoveType moveType = MoveType.Not;
 	AttackType attackType = AttackType.Not;
 	ImageType imageType = ImageType.Frisbee;
     String picturePath;
-    Button addButton;
     Button doneButton;
-    ListView listView;
-    String conduct ="下へ１マス移動";
-    ArrayList<ConductType> conductArray = new ArrayList<ConductType>();
-    ArrayAdapter<String> adapter;
 
     @Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -45,69 +44,75 @@ public class ConfigurationBossActivity extends Fragment {
 
 
         baseIntent = getActivity().getIntent();
-        adapter  = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1);
-        return inflater.inflate(R.layout.activity_configuration_boss, container, false);
+
+
+
+        return inflater.inflate(R.layout.activity_configuration_enemy, container, false);
 
     }
 
-
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-
-        ArrayAdapter<String> adapterConduct = new ArrayAdapter<String>(getActivity(), R.layout.spinner_item, getResources().getStringArray(R.array.spinnerbossType));
-        ArrayAdapter<String> adapterImage = new ArrayAdapter<String>(getActivity(), R.layout.spinner_item, getResources().getStringArray(R.array.spinnerimageType));
-        addButton = (Button)getView().findViewById(R.id.add);
-        addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                add(conduct);
-            }
-        });
+        ArrayAdapter<String> adapterMove = new ArrayAdapter<String>(getActivity(), R.layout.spinner_item, getResources().getStringArray(R.array.spinnermoveType));
+        ArrayAdapter<String> adapterAttack = new ArrayAdapter<String>(getActivity(), R.layout.spinner_item, getResources().getStringArray(R.array.spinnerattackType));
         doneButton = (Button)getView().findViewById(R.id.done);
         doneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                done();
+                Done();
             }
         });
-        Spinner spinnerImage = (Spinner)getView().findViewById(R.id.image);
-        Spinner spinnerConduct = (Spinner)getView().findViewById(R.id.conduct);
-        listView = (ListView)getView().findViewById(R.id.listView);
 
-        spinnerConduct.setAdapter(adapterConduct);
-        spinnerImage.setAdapter(adapterImage);
+        Spinner spinnerMove = (Spinner)getView().findViewById(R.id.spinner1);
+        Spinner spinnerAttack = (Spinner)getView().findViewById(R.id.spinner2);
+        Spinner spinnerImage = (Spinner)getView().findViewById(R.id.spinner3);
+        spinnerMove.setAdapter(adapterMove);
+        spinnerAttack.setAdapter(adapterAttack);
 
-        spinnerConduct.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        Bitmap image[]=new Bitmap[7];
+        image[0] = BitmapFactory.decodeResource(getResources(), R.drawable.enemy_00);
+        image[1] = BitmapFactory.decodeResource(getResources(), R.drawable.enemy_00_g);
+        image[2] = BitmapFactory.decodeResource(getResources(), R.drawable.enemy_00_y);
+        image[3] = BitmapFactory.decodeResource(getResources(), R.drawable.enemy_01);
+        image[4] = BitmapFactory.decodeResource(getResources(), R.drawable.enemy_01_p);
+        image[5] = BitmapFactory.decodeResource(getResources(), R.drawable.enemy_01_r);
+        image[6] = BitmapFactory.decodeResource(getResources(), R.drawable.enemy_01_r);
+
+        List<ImageList> objects = new ArrayList<ImageList>();
+        ImageList item[] = new ImageList[7];
+
+
+        for(int i=0;i<7;i++){
+            item[i]=new ImageList();
+
+            item[i].setImagaData(image[i]);
+        }
+        item[0].setTextData("円盤A");
+        item[1].setTextData("円盤B");
+        item[2].setTextData("円盤C");
+        item[3].setTextData("戦艦A");
+        item[4].setTextData("戦艦B");
+        item[5].setTextData("戦艦D");
+        item[6].setTextData("保存された画像");
+
+        for(int i=0;i<7;i++){
+            objects.add(item[i]);
+        }
+
+        CustomAdapter customAdapater = new CustomAdapter(getActivity(), 0, objects);
+        spinnerImage.setAdapter(customAdapater);
+
+
+
+        spinnerMove.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view,int position, long id) {
+            public void onItemSelected(AdapterView<?> parent, View view,
+                                       int position, long id) {
                 String selectedItem = parent.getItemAtPosition(position).toString();
-                if (selectedItem .equals("通常")){
-                    conduct = "通常の銃弾を発射";
-                    conductArray.add(ConductType.Shot);
-                }else if (selectedItem .equals("狙撃")){
-                    conduct = "プレイヤーの方向に銃弾を発射";
-                    conductArray.add(ConductType.SnipeShot);
-                }else if (selectedItem .equals("全方位弾")){
-                    conduct = "全方向に銃弾を発射";
-                    conductArray.add(ConductType.AllDirectionShot);
-                }else if (selectedItem .equals("レーザー")){
-                    conduct = "レーザーを発射";
-                    conductArray.add(ConductType.Laser);
-                }else if (selectedItem .equals("何もしない")){
-                    conduct = "少しの間、何もせずに待機";
-                    conductArray.add(ConductType.Wait);
-                }else if (selectedItem .equals("下へ移動")){
-                    conduct = "下へ１マス移動";
-                    conductArray.add(ConductType.MoveToUnder);
-                }else if (selectedItem .equals("上へ移動")){
-                    conduct = "上へ１マス移動";
-                    conductArray.add(ConductType.MoveToUp);
-                }else if (selectedItem .equals("右へ移動")){
-                    conduct = "右へ１マス移動";
-                    conductArray.add(ConductType.MoveToRight);
-                }else if (selectedItem .equals("左へ移動")){
-                    conduct = "左へ１マス移動";
-                    conductArray.add(ConductType.MoveToLeft);
+                if (selectedItem.equals("直進")){
+                    moveType = MoveType.Straight;
+                }else if (selectedItem.equals("波線")){
+                    moveType = MoveType.Curved;
                 }
             }
             @Override
@@ -115,6 +120,32 @@ public class ConfigurationBossActivity extends Fragment {
             }
         }
         );
+
+        spinnerAttack.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view,
+                                       int position, long id) {
+                String selectedItem = parent.getItemAtPosition(position).toString();
+                if (selectedItem .equals("通常")){
+                    attackType = AttackType.ShotStraight;
+                }else if (selectedItem .equals("狙撃")){
+                    attackType = AttackType.Snipe;
+                }else if (selectedItem .equals("全方位弾")){
+                    attackType = AttackType.AllDirection;
+                }else if (selectedItem .equals("レーザー")){
+                    attackType = AttackType.Laser;
+                }else if (selectedItem .equals("全方位弾＆レーザー")){
+                    attackType = AttackType.Snipe;
+                }else if (selectedItem .equals("何もしない")){
+                    attackType = AttackType.Not;
+                }
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+            }
+        }
+        );
+
 
         spinnerImage.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -145,19 +176,14 @@ public class ConfigurationBossActivity extends Fragment {
         );
     }
 
-    public void add(String conduct){
-        adapter.add(conduct);
-        listView.setAdapter(adapter);
-    }
-
-    public void done(){
+    public void Done(){
 
 		Intent intent = new Intent(getActivity(),MainActivity.class);
 		Log.d("","move"+moveType);
 
-        intent.putExtra("EnemyType", "Boss");
-
-		intent.putParcelableArrayListExtra("ConductArray", conductArray);
+        intent.putExtra("EnemyType", "Normal");
+		intent.putExtra("MoveType", moveType.toString());
+		intent.putExtra("AttackType", attackType.toString());
 		intent.putExtra("ImageType", imageType.toString());
 
         if(imageType == ImageType.Custom){
