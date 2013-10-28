@@ -70,17 +70,20 @@ public class StoreActivity extends Activity {
                                     int position, long id) {
                 ListView listView = (ListView) parent;
                 String item = (String) listView.getItemAtPosition(position);
-                saveStage(jsonData.get(position),item);
+                saveStage(jsonData.get(position), item);
             }
         });
     }
 
-    public void saveStage(JSONObject jsonObject,String stageName) {
+    public void search(View v) {
+        query.orderByAscending("lastName");
+    }
+
+    public void saveStage(JSONObject jsonObject, String stageName) {
         Stage stage = Stage.fromJSON(jsonObject);
         StageContainer.getInstance().addStage(stage);
         StageContainer.getInstance().saveStages();
-        StageContainer.getInstance().setCurrentStageEdit(stage);
 
-        Toast.makeText(StoreActivity.this,"'"+ stageName+ "'" + " was downloaded", Toast.LENGTH_LONG).show();
+        Toast.makeText(StoreActivity.this, "'" + stageName + "'" + " was downloaded", Toast.LENGTH_LONG).show();
     }
 }

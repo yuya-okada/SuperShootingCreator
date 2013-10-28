@@ -1,4 +1,4 @@
-package com.gult.shootingcreator.edit;
+package com.gult.shootingcreator.edit.EnemyConfig;
 
 import android.app.Activity;
 import android.content.Intent;
