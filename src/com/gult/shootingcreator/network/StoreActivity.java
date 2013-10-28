@@ -54,11 +54,10 @@ public class StoreActivity extends Activity {
             JSONArray jsonArray = new JSONArray();
 
             for (int i = 0; i < datas.size(); i++) {
-
-                jsonData.add(jsonUtil.toJSONfromParse(datas.get(i)));
-                String stageName = jsonData.get(i).keys().next().toString();
+                ParseObject object = datas.get(i);
+                String stageName = object.getString("name");
                 arrayAdapter.add(stageName);
-
+                // TODO: ここでobjectのデータを使ってステージもしくはステージのJSONを作成する。
             }
 
         } catch (ParseException e) {

@@ -10,6 +10,7 @@ import java.io.BufferedReader;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Iterator;
 import java.util.Set;
 
 /**
@@ -52,6 +53,16 @@ public class JSONUtil {
             parseObject.put("enemy", jsonObject);
         } catch (Exception e) {
 
+        }
+        return parseObject;
+    }
+
+    public static ParseObject toParseObject(String className, JSONObject jsonObject) {
+        ParseObject parseObject = new ParseObject(className);
+        Iterator<String> keyIterator = jsonObject.keys();
+        while(keyIterator.hasNext()) {
+            String key = keyIterator.next();
+            parseObject.put(key, jsonObject.opt(key));
         }
         return parseObject;
     }

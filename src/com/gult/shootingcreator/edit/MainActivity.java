@@ -31,6 +31,7 @@ import com.gult.shootingcreator.foxone.fighter.FighterBase.AttackType;
 import com.gult.shootingcreator.foxone.fighter.FighterBase.MoveType;
 import com.gult.shootingcreator.foxone.fighter.enemy.BossFighterBase;
 import com.gult.shootingcreator.foxone.fighter.enemy.EnemyFighterBase;
+import com.gult.shootingcreator.util.JSONUtil;
 import com.parse.ParseObject;
 
 import org.json.JSONArray;
@@ -350,10 +351,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private class OnRelease implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            ParseObject uploadData = new ParseObject("StageData");
-            JSONObject jsonObject = new JSONObject();
-            JSONArray jsonArray = StageContainer.getInstance().getStageJSON(stageNumber);
-            uploadData.add(stageName, StageContainer.getInstance().getStageJSON(stageNumber));
+            JSONObject stageJSON = StageContainer.getInstance().getStage(stageNumber).toJSON();
+            ParseObject uploadData = JSONUtil.toParseObject("StageData", stageJSON);
             uploadData.saveInBackground();
             Toast.makeText(App.getContext(), "This stage was released", Toast.LENGTH_LONG).show();
         }
