@@ -22,6 +22,8 @@ public class StageChooseAdapter extends ArrayAdapter<String>{
         View v = super.getView(position,convertView,parent);
         v.setOnClickListener(new RowClickListener(position));
         v.setOnLongClickListener(new RowLongClickListener(position));
+        setNotifyOnChange(true);
+        
         return v;
     }
 

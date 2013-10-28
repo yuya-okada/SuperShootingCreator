@@ -27,11 +27,11 @@
                 android:label="@string/title_activity_player_option">
         </activity>
         <activity
-                android:name="com.gult.shootingcreator.edit.GridActivity"
+                android:name=".edit.EnemyConfig.GridActivity"
                 android:label="@string/title_activity_configuration_enemy">
         </activity>
         <activity
-                android:name="com.gult.shootingcreator.edit.EnemyConfigTab"
+                android:name=".edit.EnemyConfig.EnemyConfigTab"
                 android:label="EnemyConfigTab">
         </activity>
         <activity
