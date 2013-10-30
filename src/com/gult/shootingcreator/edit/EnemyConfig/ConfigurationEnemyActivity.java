@@ -99,7 +99,7 @@ public class ConfigurationEnemyActivity extends Fragment {
             objects.add(item[i]);
         }
 
-        CustomAdapter customAdapater = new CustomAdapter(getActivity(), 0, objects);
+        CustomAdapter customAdapater = new CustomAdapter(getActivity(), R.layout.spinner_item, objects);
         spinnerImage.setAdapter(customAdapater);
 
 
