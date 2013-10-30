@@ -55,11 +55,16 @@ public class StoreActivity extends Activity {
 
             for (int i = 0; i < datas.size(); i++) {
 
+
                 jsonData.add(jsonUtil.toJSONfromParse(datas.get(i)));
                 String stageName = jsonData.get(i).keys().next().toString();
-                arrayAdapter.add(stageName);
+                ParseObject object = datas.get(i);
+                String name = object.getString("name");
+                arrayAdapter.add(name);
+                // TODO: ここでobjectのデータを使ってステージもしくはステージのJSONを作成する。
 
             }
+
 
         } catch (ParseException e) {
         }
@@ -70,7 +75,9 @@ public class StoreActivity extends Activity {
                                     int position, long id) {
                 ListView listView = (ListView) parent;
                 String item = (String) listView.getItemAtPosition(position);
+                String foo = jsonData.get(position).toString();
                 saveStage(jsonData.get(position), item);
+
             }
         });
     }
