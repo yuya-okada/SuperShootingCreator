@@ -2,12 +2,14 @@ package com.gult.shootingcreator.network;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.gult.shootingcreator.R;
 import com.gult.shootingcreator.edit.Stage;
 import com.gult.shootingcreator.edit.StageContainer;
@@ -56,12 +58,18 @@ public class StoreActivity extends Activity {
             for (int i = 0; i < datas.size(); i++) {
 
 
-                jsonData.add(jsonUtil.toJSONfromParse(datas.get(i)));
-                String stageName = jsonData.get(i).keys().next().toString();
+                //jsonData.add(jsonUtil.toJSONfromParse(datas.get(i)));
+                //String stageName = jsonData.get(i).keys().next().toString();
                 ParseObject object = datas.get(i);
                 String name = object.getString("name");
                 arrayAdapter.add(name);
                 // TODO: ここでobjectのデータを使ってステージもしくはステージのJSONを作成する。
+                try{
+                Gson gson = new Gson();
+                jsonData.add(new JSONObject(gson.toJson(jsonUtil.fromParse(object))));
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
 
             }
 
@@ -75,7 +83,6 @@ public class StoreActivity extends Activity {
                                     int position, long id) {
                 ListView listView = (ListView) parent;
                 String item = (String) listView.getItemAtPosition(position);
-                String foo = jsonData.get(position).toString();
                 saveStage(jsonData.get(position), item);
 
             }
@@ -87,6 +94,7 @@ public class StoreActivity extends Activity {
     }
 
     public void saveStage(JSONObject jsonObject, String stageName) {
+        Log.d("StageJSON=",""+jsonObject);
         Stage stage = Stage.fromJSON(jsonObject);
         StageContainer.getInstance().addStage(stage);
         StageContainer.getInstance().saveStages();

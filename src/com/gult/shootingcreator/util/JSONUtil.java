@@ -4,6 +4,8 @@ import android.content.Context;
 
 import com.parse.ParseObject;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -11,7 +13,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Iterator;
-import java.util.Set;
+import java.util.Map;
 
 /**
  * Created by okadakeiko on 13/08/28.
@@ -57,18 +59,23 @@ public class JSONUtil {
         return parseObject;
     }
 
-    public JSONObject toJSONfromParse(ParseObject parseObject) {
-
-        Set<String> jsonObjectSet = parseObject.keySet();
-        JSONObject jsonObject = new JSONObject();
-        try {
-            for (String key : parseObject.keySet()) {
-                jsonObject.put(key, parseObject.get(key));
+    public Object fromParse(Object object) throws JSONException {
+        if (object instanceof Map) {
+            JSONObject json = new JSONObject();
+            Map map = (Map) object;
+            for (Object key : map.keySet()) {
+                json.put(key.toString(), fromParse(map.get(key)));
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+            return json;
+        } else if (object instanceof Iterable) {
+            JSONArray json = new JSONArray();
+            for (Object value : ((Iterable)object)) {
+                json.put(value);
+            }
+            return json;
+        } else {
+            return object;
         }
-        return jsonObject;
     }
 
     public static ParseObject toParseObject(String className, JSONObject jsonObject) {
