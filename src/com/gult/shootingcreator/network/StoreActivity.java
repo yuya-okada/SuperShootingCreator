@@ -2,6 +2,7 @@ package com.gult.shootingcreator.network;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -54,11 +55,23 @@ public class StoreActivity extends Activity {
             JSONArray jsonArray = new JSONArray();
 
             for (int i = 0; i < datas.size(); i++) {
+
+
+                //jsonData.add(jsonUtil.toJSONfromParse(datas.get(i)));
+                //String stageName = jsonData.get(i).keys().next().toString();
                 ParseObject object = datas.get(i);
-                String stageName = object.getString("name");
-                arrayAdapter.add(stageName);
+                String name = object.getString("name");
+                arrayAdapter.add(name);
                 // TODO: ここでobjectのデータを使ってステージもしくはステージのJSONを作成する。
+                JSONObject jsonObject;
+                try {
+                    jsonData.add((JSONObject) jsonUtil.toJSON(object));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
             }
+
 
         } catch (ParseException e) {
         }
@@ -67,6 +80,7 @@ public class StoreActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
+
                 ListView listView = (ListView) parent;
                 String item = (String) listView.getItemAtPosition(position);
                 saveStage(jsonData.get(position), item);
@@ -79,10 +93,11 @@ public class StoreActivity extends Activity {
     }
 
     public void saveStage(JSONObject jsonObject, String stageName) {
+        Log.d("StageJSON=", "" + jsonObject);
         Stage stage = Stage.fromJSON(jsonObject);
         StageContainer.getInstance().addStage(stage);
         StageContainer.getInstance().saveStages();
-
         Toast.makeText(StoreActivity.this, "'" + stageName + "'" + " was downloaded", Toast.LENGTH_LONG).show();
+
     }
 }

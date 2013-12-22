@@ -3,13 +3,7 @@ package com.gult.shootingcreator.edit;
 import android.content.Context;
 
 import com.gult.shootingcreator.App;
-import com.gult.shootingcreator.bundle.Displayable;
-import com.gult.shootingcreator.bundle.DisplayableFactory;
 import com.gult.shootingcreator.foxone.fighter.FighterBase;
-import com.gult.shootingcreator.foxone.fighter.FighterBase.AttackType;
-import com.gult.shootingcreator.foxone.fighter.FighterBase.MoveType;
-import com.gult.shootingcreator.foxone.fighter.enemy.BossFighterBase;
-import com.gult.shootingcreator.foxone.fighter.enemy.EnemyFighterBase;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -85,10 +79,11 @@ public class Stage {
 
         Stage stage = (Stage) o;
 
-        if (!stageName.equals(stage.stageName)) return false;
+//        if (!stageName.equals(stage.stageName)) return false;
 
         return true;
     }
+
 
     @Override
     public int hashCode() {
