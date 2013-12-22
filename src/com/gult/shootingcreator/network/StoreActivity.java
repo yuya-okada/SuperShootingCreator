@@ -9,7 +9,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.gult.shootingcreator.R;
 import com.gult.shootingcreator.edit.Stage;
 import com.gult.shootingcreator.edit.StageContainer;
@@ -64,10 +63,10 @@ public class StoreActivity extends Activity {
                 String name = object.getString("name");
                 arrayAdapter.add(name);
                 // TODO: ここでobjectのデータを使ってステージもしくはステージのJSONを作成する。
-                try{
-                Gson gson = new Gson();
-                jsonData.add(new JSONObject(gson.toJson(jsonUtil.fromParse(object))));
-                }catch(Exception e){
+                JSONObject jsonObject;
+                try {
+                    jsonData.add((JSONObject) jsonUtil.toJSON(object));
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
@@ -81,10 +80,10 @@ public class StoreActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
+
                 ListView listView = (ListView) parent;
                 String item = (String) listView.getItemAtPosition(position);
                 saveStage(jsonData.get(position), item);
-
             }
         });
     }
@@ -94,11 +93,11 @@ public class StoreActivity extends Activity {
     }
 
     public void saveStage(JSONObject jsonObject, String stageName) {
-        Log.d("StageJSON=",""+jsonObject);
+        Log.d("StageJSON=", "" + jsonObject);
         Stage stage = Stage.fromJSON(jsonObject);
         StageContainer.getInstance().addStage(stage);
         StageContainer.getInstance().saveStages();
-
         Toast.makeText(StoreActivity.this, "'" + stageName + "'" + " was downloaded", Toast.LENGTH_LONG).show();
+
     }
 }
