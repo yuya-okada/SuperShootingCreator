@@ -113,4 +113,16 @@ public class JSONUtil {
         return parseObject;
     }
 
+    public static JSONObject getCleanObject(ParseObject parseObject) {
+        JSONObject cleanedObject = new JSONObject();
+        for (String key: parseObject.keySet()) {
+            try {
+                cleanedObject.put(key, parseObject.get(key));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return cleanedObject;
+    }
+
 }

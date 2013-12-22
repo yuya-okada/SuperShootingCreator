@@ -59,13 +59,13 @@ public class StoreActivity extends Activity {
 
                 //jsonData.add(jsonUtil.toJSONfromParse(datas.get(i)));
                 //String stageName = jsonData.get(i).keys().next().toString();
-                ParseObject object = datas.get(i);
-                String name = object.getString("name");
+                JSONObject object = JSONUtil.getCleanObject(datas.get(i));
+                String name = object.optString("name");
                 arrayAdapter.add(name);
                 // TODO: ここでobjectのデータを使ってステージもしくはステージのJSONを作成する。
-                JSONObject jsonObject;
                 try {
-                    jsonData.add((JSONObject) jsonUtil.toJSON(object));
+                    JSONObject convertedObject = jsonUtil.toJSON(object);
+                    jsonData.add(convertedObject);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
